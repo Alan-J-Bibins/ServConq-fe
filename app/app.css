@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
-@plugin "tailwindcss-motion"
+@plugin "tailwindcss-motion";
 
 @theme {
-    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+    --font-sans: "Funnel Display", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
