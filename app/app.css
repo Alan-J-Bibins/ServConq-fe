@@ -14,4 +14,10 @@ body {
     @media (prefers-color-scheme: dark) {
         color-scheme: dark;
     }
+
+    /* to be removed later */
+    input {
+        @apply border border-gray-300
+    }
+
 }
