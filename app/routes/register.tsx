@@ -14,7 +14,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
     const formData = await request.formData();
     const userFullName = String(formData.get('userFullName'));
-    const userNickname = String(formData.get('userNickname'));
+    const userEmail = String(formData.get('userEmail'));
     const userPassword = String(formData.get('userPassword'));
     const userPasswordConfirm = String(formData.get('userPasswordConfirm'));
 
@@ -22,10 +22,36 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         console.log("[app/routes/register.tsx:10] userPassword !== userPasswordConfirm = ", userPassword !== userPasswordConfirm)
         return { err: "Passwords Are Not Matching" };
     }
-    // We need to check if the userNickname already exists, this is unique sooo
 
+    let req;
+    try {
+        req = await fetch(`${process.env.API_URL}/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "applicaton/json"
+            },
+            body: JSON.stringify({
+                name: userFullName,
+                email: userEmail,
+                password: userPassword,
 
-    return redirect("/login")
+            })
+        })
+    } catch (error) {
+        return { err: error }
+    }
+
+    const { success, error } = await req.json();
+    console.log("[app/routes/register.tsx:44] success = ", success)
+
+    if (success && success === true) {
+        return redirect("/login")
+    } else if (error) {
+        return { err: error }
+    } else {
+        return { err: "Registration Failed" }
+    }
+
 
 }
 
@@ -46,10 +72,10 @@ export default function Page() {
                     type="text"
                     required
                 />
-                <label>Enter Username: </label>
+                <label>Enter Email: </label>
                 <input
-                    name="userNickname"
-                    type="text"
+                    name="userEmail"
+                    type="email"
                     required
                 />
                 <label>Enter Password: </label>

@@ -13,30 +13,33 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
     const formData = await request.formData();
-    const userNickname = String(formData.get('userNickname'));
+    const userEmail = String(formData.get('userEmail'));
     const userPassword = String(formData.get('userPassword'));
-    console.log("[app/routes/login.tsx:5] userNickname = ", userNickname)
+    console.log("[app/routes/login.tsx:5] userEmail = ", userEmail)
     console.log("[app/routes/login.tsx:7] userPassword = ", userPassword)
 
-    // In reality, we should check the db if this username exists
-    if (userNickname !== 'john') {
-        return { err: "Username not recognized" }
+    let req;
+    try {
+        req = await fetch(`${process.env.API_URL}/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: userEmail,
+                password: userPassword
+            })
+        })
+    } catch (error) {
+        return { err: error }
     }
 
-    const req = await fetch(`${process.env.API_URL}/login`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username: userNickname,
-            password: userPassword
-        })
-    })
-    const { token } = await req.json();
+    const { token, error } = await req.json();
     console.log("[app/routes/login.tsx:15] token = ", token)
 
-    if (!token) {
+    if (error) {
+        return { err: error }
+    } else if (!token) {
         return { err: "Login Failed" }
     }
 
@@ -62,10 +65,10 @@ export default function Page() {
                 action="/login"
                 className="flex flex-col gap-4"
             >
-                <label>Username: </label>
+                <label>Email: </label>
                 <input
-                    name="userNickname"
-                    type="text"
+                    name="userEmail"
+                    type="email"
                     required
                 />
                 <label>Password: </label>
