@@ -1,4 +1,4 @@
-import { Form, redirect, useActionData, type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
+import { Form, Link, redirect, useActionData, type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
 import { serverSessionStorage } from "~/session.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -57,38 +57,49 @@ export default function Page() {
     const actionData = useActionData();
 
     return (
-        <main>
-            <h1 className="text-4xl font-bold">Login</h1>
-            <br />
-            <Form
-                method="POST"
-                action="/login"
-                className="flex flex-col gap-4"
-            >
-                <label>Email: </label>
-                <input
-                    name="userEmail"
-                    type="email"
-                    required
-                />
-                <label>Password: </label>
-                <input
-                    name="userPassword"
-                    type="password"
-                    required
-                />
-                <button
-                    type="submit"
-                    className="p-4 bg-blue-400 w-fit"
+        <main className="h-screen flex justify-center items-center">
+            <div className="bg-secondary/10 border border-secondary rounded-2xl p-4 w-full min-w-96 max-w-1/4">
+                <div className="flex gap-4 items-center">
+                    <h1 className="tracking-widest text-accent uppercase text-shadow-accent/25 text-shadow-lg text-base">Login</h1>
+                    <hr className="border-secondary w-full"/>
+                </div>
+                <br />
+                <Form
+                    method="POST"
+                    action="/login"
+                    className="flex flex-col gap-4"
                 >
-                    Submit
-                </button>
-                {actionData?.err && (
-                    <h4 className="text-red-500">
-                        {actionData?.err}
-                    </h4>
-                )}
-            </Form>
+                    <label>Email </label>
+                    <input
+                        name="userEmail"
+                        type="email"
+                        placeholder="Enter Email"
+                        required
+                    />
+                    <label>Password </label>
+                    <input
+                        name="userPassword"
+                        type="password"
+                        placeholder="Enter Password"
+                        required
+                    />
+                    <br />
+                    <button
+                        type="submit"
+                        className=""
+                    >
+                        Submit
+                    </button>
+                    <p className="text-center text-lg w-full">Don't have an account?&nbsp;
+                        <Link to="/register" className="text-accent hover:underline">Create an Account</Link>
+                    </p>
+                    {actionData?.err && (
+                        <h4 className="text-red-500">
+                            {actionData?.err}
+                        </h4>
+                    )}
+                </Form>
+            </div>
         </main>
     )
 }

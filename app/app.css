@@ -12,6 +12,7 @@
     --color-accent: #f66c6a;
     --text-shadow-xl: 0 16px 32px;
     --text-shadow-2xl: 0 32px 64px;
+    --shadow-custom: 0 4px 8px 0 rgba(114, 144, 216, 0.25);
 }
 
 @layer base {
@@ -46,9 +47,23 @@ body {
         color-scheme: dark;
     }
 
-    /* to be removed later */
-    input {
-        @apply border border-gray-300
+    label {
+        @apply text-lg text-primary;
     }
 
+    input {
+        @apply bg-secondary/20 rounded-2xl border border-secondary text-primary transition-all px-4 py-2
+        focus:shadow-primary/25 focus:shadow-md focus:border-primary focus:outline-0
+        placeholder:text-primary/40;
+    }
+
+    .clickable,
+    button {
+        @apply bg-gradient-to-b from-secondary/10 to-primary/10 p-2 text-base text-primary rounded-2xl
+        border border-t-secondary/40 border-b-primary/40 border-x-primary/10
+        disabled:opacity-40
+        hover:border-b-primary hover:cursor-pointer hover:shadow-custom hover:shadow-primary/25 hover:to-primary/20 hover:from-secondary/20 hover:scale-[101%]
+        transition-all
+        ;
+    }
 }
