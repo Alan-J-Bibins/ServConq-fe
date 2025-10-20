@@ -1,4 +1,5 @@
 import { Outlet, redirect, type LoaderFunctionArgs } from "react-router"
+import Sidebar from "~/components/Sidebar";
 import { serverSessionStorage } from "~/session.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -15,9 +16,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function Layout() {
     return (
-        <div>
+        <main className="flex items-start justify-start">
+            <Sidebar />
             <Outlet />
-        </div>
+        </main>
     )
 }
 

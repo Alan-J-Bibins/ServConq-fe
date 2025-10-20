@@ -44,7 +44,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function Page() {
     const { msg } = useLoaderData<typeof loader>();
     return (
-        <div>
+        <div className="h-screen">
             <h1>{msg}</h1>
             Dashboard Page
             <Form

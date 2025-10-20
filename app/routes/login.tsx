@@ -20,6 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     let req;
     try {
+        console.log("Unkodes")
         req = await fetch(`${process.env.API_URL}/login`, {
             method: "POST",
             headers: {
@@ -31,6 +32,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             })
         })
     } catch (error) {
+        console.log("OOOPP", error)
         return { err: error }
     }
 
@@ -94,8 +96,8 @@ export default function Page() {
                         <Link to="/register" className="text-accent hover:underline">Create an Account</Link>
                     </p>
                     {actionData?.err && (
-                        <h4 className="text-red-500">
-                            {actionData?.err}
+                        <h4 className="text-red-500 text-center bg-red-500/20 rounded-2xl">
+                            {String(actionData?.err)}
                         </h4>
                     )}
                 </Form>

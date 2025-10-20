@@ -62,7 +62,7 @@ export default function Page() {
             <div className="bg-secondary/10 border border-secondary rounded-2xl p-4 w-full min-w-96 max-w-1/4 motion-blur-in motion-scale-in-105">
                 <div className="flex gap-4 items-center">
                     <h1 className="tracking-widest text-accent uppercase text-shadow-accent/25 text-shadow-lg text-base">Register</h1>
-                    <hr className="border-secondary w-full"/>
+                    <hr className="border-secondary w-full" />
                 </div>
                 <br />
                 <Form
@@ -109,8 +109,8 @@ export default function Page() {
                         <Link to="/login" className="text-accent hover:underline">Login</Link>
                     </p>
                     {actionData?.err && (
-                        <h4 className="text-red-500">
-                            {actionData?.err}
+                        <h4 className="text-red-500 text-center bg-red-500/20 rounded-2xl">
+                            {String(actionData?.err)}
                         </h4>
                     )}
                 </Form>
