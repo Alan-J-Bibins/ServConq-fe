@@ -1,4 +1,4 @@
-import { Form, redirect, useActionData, type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
+import { Form, Link, redirect, useActionData, type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
 import { serverSessionStorage } from "~/session.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -58,50 +58,63 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function Page() {
     const actionData = useActionData();
     return (
-        <main>
-            <h1 className="text-4xl font-bold">Register</h1>
-            <br />
-            <Form
-                className="flex flex-col gap-4 "
-                method="POST"
-                action="/register"
-            >
-                <label>Enter Name: </label>
-                <input
-                    name="userFullName"
-                    type="text"
-                    required
-                />
-                <label>Enter Email: </label>
-                <input
-                    name="userEmail"
-                    type="email"
-                    required
-                />
-                <label>Enter Password: </label>
-                <input
-                    name="userPassword"
-                    type="password"
-                    required
-                />
-                <label>Confirm Password: </label>
-                <input
-                    name="userPasswordConfirm"
-                    type="password"
-                    required
-                />
-                <button
-                    type="submit"
-                    className="p-4 bg-blue-400 w-fit"
+        <main className="h-screen flex justify-center items-center">
+            <div className="bg-secondary/10 border border-secondary rounded-2xl p-4 w-full min-w-96 max-w-1/4 motion-blur-in motion-scale-in-105">
+                <div className="flex gap-4 items-center">
+                    <h1 className="tracking-widest text-accent uppercase text-shadow-accent/25 text-shadow-lg text-base">Register</h1>
+                    <hr className="border-secondary w-full"/>
+                </div>
+                <br />
+                <Form
+                    className="flex flex-col gap-4 "
+                    method="POST"
+                    action="/register"
                 >
-                    Submit
-                </button>
-                {actionData?.err && (
-                    <h4 className="text-red-500">
-                        {actionData?.err}
-                    </h4>
-                )}
-            </Form>
+                    <label>Name </label>
+                    <input
+                        name="userFullName"
+                        type="text"
+                        placeholder="Enter Your Name"
+                        required
+                    />
+                    <label>Email </label>
+                    <input
+                        name="userEmail"
+                        type="email"
+                        placeholder="Enter Your Email"
+                        required
+                    />
+                    <label>Password </label>
+                    <input
+                        name="userPassword"
+                        type="password"
+                        placeholder="Enter Your Password"
+                        required
+                    />
+                    <label>Confirm Password </label>
+                    <input
+                        name="userPasswordConfirm"
+                        type="password"
+                        placeholder="Enter Your Password Again"
+                        required
+                    />
+                    <br />
+                    <button
+                        type="submit"
+                        className="clickableButAccent"
+                    >
+                        Register
+                    </button>
+                    <p className="text-center text-lg w-full">Already have an account?&nbsp;
+                        <Link to="/login" className="text-accent hover:underline">Login</Link>
+                    </p>
+                    {actionData?.err && (
+                        <h4 className="text-red-500">
+                            {actionData?.err}
+                        </h4>
+                    )}
+                </Form>
+            </div>
         </main>
     )
 }
