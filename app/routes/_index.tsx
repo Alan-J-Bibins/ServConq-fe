@@ -5,7 +5,7 @@ export default function Page() {
                 Welcome To
             </h1>
             <h1 className="text-9xl gradientText text-shadow-xl text-shadow-primary/45 motion-delay-1000 motion-opacity-in motion-translate-y-in">
-                ServConq
+                ServConq ALAN
             </h1>
         </div>
     )
