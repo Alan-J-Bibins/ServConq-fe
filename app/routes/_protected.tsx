@@ -1,4 +1,5 @@
 import { Outlet, redirect, type LoaderFunctionArgs } from "react-router"
+import Header from "~/components/Header";
 import Sidebar from "~/components/Sidebar";
 import { serverSessionStorage } from "~/session.server";
 
@@ -16,9 +17,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function Layout() {
     return (
-        <main className="flex items-start justify-start">
-            <Sidebar />
-            <Outlet />
+        <main className="w-full h-full flex flex-col justify-start items-start">
+            <Header />
+            <div className="flex items-start justify-start h-full w-full">
+                <Sidebar />
+                <div className="bg-secondary/10 w-full h-full">
+                    <Outlet />
+                </div>
+            </div>
         </main>
     )
 }
