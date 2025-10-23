@@ -13,6 +13,7 @@
     --text-shadow-xl: 0 16px 32px;
     --text-shadow-2xl: 0 32px 64px;
     --shadow-custom: 0 4px 8px 0 ;
+    --tracking-custom: 20%;
 }
 
 @layer base {
