@@ -1,5 +1,5 @@
 import { HardDrive, LayoutDashboard, UserRoundPen, UsersRound, type LucideIcon } from "lucide-react"
-import { href, NavLink } from "react-router"
+import { NavLink } from "react-router"
 
 export default function Sidebar() {
     return (
