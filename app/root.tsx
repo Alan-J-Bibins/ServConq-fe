@@ -5,10 +5,13 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
+    useLoaderData,
+    type LoaderFunctionArgs,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { themeCookie } from "./cookie.server";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -23,16 +26,28 @@ export const links: Route.LinksFunction = () => [
     },
 ];
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+
+    const cookieHeader = request.headers.get("Cookie");
+    console.log("[app/root.tsx:31] cookieHeader = ", cookieHeader)
+    const cookie = (await themeCookie.parse(cookieHeader)) || {};
+    console.log("[app/root.tsx:33] cookie = ", cookie)
+    const theme = cookie.theme || "dark";
+
+    return { theme }
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+    const { theme } = useLoaderData<typeof loader>();
     return (
-        <html lang="en">
+        <html lang="en" data-theme={theme}>
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <Meta />
                 <Links />
             </head>
-            <body className="h-screen">
+            <body className="h-screen antialiased">
                 {children}
                 <ScrollRestoration />
                 <Scripts />

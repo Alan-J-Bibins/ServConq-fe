@@ -1,6 +1,7 @@
-import { Outlet, redirect, type LoaderFunctionArgs } from "react-router"
+import { Outlet, redirect, useLoaderData, type LoaderFunctionArgs } from "react-router"
 import Header from "~/components/Header";
 import Sidebar from "~/components/Sidebar";
+import { themeCookie } from "~/cookie.server";
 import { serverSessionStorage } from "~/session.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -13,12 +14,18 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
             }
         })
     }
+    const cookieHeader = request.headers.get("Cookie")
+    const cookie = (await themeCookie.parse(cookieHeader)) || {};
+    console.log("[app/routes/_protected.tsx:18] cookie = ", cookie)
+    const theme = cookie.theme || "dark";
+    return { theme }
 }
 
 export default function Layout() {
+    const { theme } = useLoaderData<typeof loader>();
     return (
         <main className="w-full h-full flex flex-col justify-start items-start">
-            <Header />
+            <Header initialTheme={theme}/>
             <div className="flex items-start justify-start h-full w-full">
                 <Sidebar />
                 <div className="bg-secondary/10 w-full h-full">

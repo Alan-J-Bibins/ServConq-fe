@@ -7,6 +7,7 @@
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --color-text: #f1f2f4;
     --color-background: #030407;
+    --color-background2: #0D1324;
     --color-primary: #7391d9;
     --color-secondary: #3c4d72;
     --color-accent: #f66c6a;
@@ -20,6 +21,7 @@
     [data-theme='light'] {
         --color-text: rgb(11 12 14);
         --color-background: rgb(248 249 252);
+        --color-background2: #D5E3FF;
         --color-primary: rgb(9 42 119);
         --color-secondary: rgb(141 158 195);
         --color-accent: rgb(149 11 9);
@@ -28,6 +30,7 @@
     [data-theme='dark'] {
         --color-text: #F1F2F4;
         --color-background: #030407;
+        --color-background2: #0D1324;
         --color-primary: #88A9F6;
         --color-secondary: #3C4C72;
         --color-accent: #F66C6A;
@@ -40,9 +43,9 @@
 
 html,
 body {
-    @apply bg-background text-text;
+    @apply text-text transition-colors;
 
-    background: radial-gradient(166.34% 70.71% at 50% 50%, var(--color-background, #030407) 0%, #0D1324 100%);
+    background: radial-gradient(166.34% 70.71% at 50% 50%, var(--color-background, #030407) 0%, var(--color-background2, #0D1324) 100%);
 
     @media (prefers-color-scheme: dark) {
         color-scheme: dark;
