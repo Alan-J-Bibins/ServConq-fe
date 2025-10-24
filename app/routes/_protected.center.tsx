@@ -1,4 +1,4 @@
-import {OctagonAlert, Grid2x2Plus, ChevronDown} from "lucide-react";
+import { OctagonAlert, Grid2x2Plus, ChevronDown } from "lucide-react";
 import {
     Form,
     useLoaderData,
@@ -9,7 +9,7 @@ import CustomDialog from "~/components/Dialog";
 import DataCenterCard from "~/components/DataCenterCard";
 import { serverSessionStorage } from "~/session.server";
 import { Listbox, Transition } from "@headlessui/react";
-import {Fragment, useState} from "react";
+import { Fragment, useState } from "react";
 
 // Type definition for one Data Center entry
 export type DataCenterEntry = {
@@ -216,24 +216,24 @@ export default function Page() {
                                 {/* Button */}
                                 <Listbox.Button
                                     className="
-        bg-secondary/20
-        border border-primary/40
-        text-primary
-        rounded-2xl
-        px-4 py-2
-        w-full
-        text-left
-        appearance-none
-        focus:border-primary
-        focus:ring-2
-        focus:ring-primary/40
-        focus:outline-none
-        hover:bg-secondary/30
-        hover:shadow-glow
-        transition-all
-        cursor-pointer
-        flex justify-between items-center
-      "
+                                    bg-secondary/20
+                                    border border-primary/40
+                                    text-primary
+                                    rounded-2xl
+                                    px-4 py-2
+                                    w-full
+                                    text-left
+                                    appearance-none
+                                    focus:border-primary
+                                    focus:ring-2
+                                    focus:ring-primary/40
+                                    focus:outline-none
+                                    hover:bg-secondary/30
+                                    hover:shadow-glow
+                                    transition-all
+                                    cursor-pointer
+                                    flex justify-between items-center
+                                  "
                                 >
                                     {selectedTeam ? selectedTeam.name : "Select a Team"}
                                     <ChevronDown size={18} className="text-primary ml-2" />
@@ -248,25 +248,24 @@ export default function Page() {
                                 >
                                     <Listbox.Options
                                         className="
-          absolute mt-2 w-full
-          bg-secondary/20
-          border border-primary/40
-          rounded-2xl
-          shadow-lg
-          backdrop-blur-md
-          text-primary
-          max-h-60 overflow-auto
-          focus:outline-none
-          z-10
-        "
+                                          absolute mt-2 w-full
+                                          bg-secondary/20
+                                          border border-primary/40
+                                          rounded-2xl
+                                          shadow-lg
+                                          backdrop-blur-md
+                                          text-primary
+                                          max-h-60 overflow-auto
+                                          focus:outline-none
+                                          z-10
+                                        "
                                     >
                                         {teamList.map((team) => (
                                             <Listbox.Option
                                                 key={team.id}
                                                 value={team}
                                                 className={({ active }) =>
-                                                    `cursor-pointer select-none px-4 py-2 rounded-xl ${
-                                                        active ? "bg-primary/30 text-primary font-semibold" : "text-primary"
+                                                    `cursor-pointer select-none px-4 py-2 rounded-xl ${active ? "bg-primary/30 text-primary font-semibold" : "text-primary"
                                                     }`
                                                 }
                                             >
@@ -280,10 +279,6 @@ export default function Page() {
 
                         {/* Hidden input so form submission still includes team ID */}
                         <input type="hidden" name="teamId" value={selectedTeam?.id || ""} />
-
-
-
-
                         <input
                             hidden
                             readOnly
@@ -311,7 +306,7 @@ export default function Page() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-6">
                     {dataCenters.map((center) => (
                         <DataCenterCard
-                           key={center.name}
+                            key={center.name}
                             id={center.id}
                             name={center.name}
                             serversRunning="5/5"

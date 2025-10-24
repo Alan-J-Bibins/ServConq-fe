@@ -95,6 +95,7 @@ export default function CustomDialog({
 
                         </div>
                         {children}
+                        <br />
                         <div className="flex items-center gap-2 flex-row-reverse">
                             <div>
                                 {submit}
