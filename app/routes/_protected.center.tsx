@@ -210,7 +210,7 @@ export default function Page() {
                             className="resize-y h-28"
                         />
 
-                        <label className="text-lg text-primary font-semibold">Team</label>
+                        <label>Team</label>
                         <Listbox value={selectedTeam} onChange={setSelectedTeam}>
                             <div className="relative mt-1">
                                 {/* Button */}
@@ -229,7 +229,6 @@ export default function Page() {
                                     focus:ring-primary/40
                                     focus:outline-none
                                     hover:bg-secondary/30
-                                    hover:shadow-glow
                                     transition-all
                                     cursor-pointer
                                     flex justify-between items-center
@@ -303,7 +302,7 @@ export default function Page() {
                     </span>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4">
                     {dataCenters.map((center) => (
                         <DataCenterCard
                             key={center.name}
