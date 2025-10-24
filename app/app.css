@@ -76,3 +76,13 @@ body {
         hover:border-x-transparent hover:border-t-secondary/15 hover:scale-[101%] hover:text-shadow-md hover:text-shadow-accent/25 transition-all;
     }
 }
+@layer utilities {
+    .shadow-glow {
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+    }
+
+    .clickable {
+        @apply px-3 py-2 rounded-lg bg-secondary/30 border border-primary text-white
+        hover:bg-secondary/40 hover:shadow-custom transition-all;
+    }
+}

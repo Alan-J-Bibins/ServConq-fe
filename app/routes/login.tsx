@@ -60,7 +60,7 @@ export default function Page() {
 
     return (
         <main className="h-screen flex justify-center items-center">
-            <div className="bg-secondary/10 border border-secondary rounded-2xl p-4 w-full min-w-96 max-w-1/4 motion-blur-in motion-scale-in-105">
+            <div className="bg-secondary/10 border border-secondary rounded-2xl p-4 w-full min-w-96 max-w-1/4 motion-blur-in motion-scale-in-105 ">
                 <div className="flex gap-4 items-center">
                     <h1 className="tracking-custom text-accent uppercase text-shadow-accent/25 text-shadow-lg text-base">Login</h1>
                     <hr className="border-secondary w-full"/>
