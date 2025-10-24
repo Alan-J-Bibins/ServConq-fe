@@ -16,7 +16,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
     const cookieHeader = request.headers.get("Cookie")
     const cookie = (await themeCookie.parse(cookieHeader)) || {};
-    console.log("[app/routes/_protected.tsx:18] cookie = ", cookie)
     const theme = cookie.theme || "dark";
     return { theme }
 }

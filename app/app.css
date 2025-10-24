@@ -55,6 +55,7 @@ body {
         @apply text-lg text-primary;
     }
 
+    textarea,
     input {
         @apply bg-secondary/20 rounded-2xl border border-secondary text-primary transition-all px-4 py-2 focus:shadow-primary/25 focus:shadow-md focus:border-primary focus:outline-0 placeholder:text-primary/40;
     }

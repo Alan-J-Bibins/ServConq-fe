@@ -29,9 +29,7 @@ export const links: Route.LinksFunction = () => [
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 
     const cookieHeader = request.headers.get("Cookie");
-    console.log("[app/root.tsx:31] cookieHeader = ", cookieHeader)
     const cookie = (await themeCookie.parse(cookieHeader)) || {};
-    console.log("[app/root.tsx:33] cookie = ", cookie)
     const theme = cookie.theme || "dark";
 
     return { theme }
