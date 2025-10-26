@@ -6,12 +6,14 @@ import {
     Scripts,
     ScrollRestoration,
     useLoaderData,
+    useNavigation,
     type LoaderFunctionArgs,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 import { themeCookie } from "./cookie.server";
+import LoadingIndicator from "./components/LoadingIndicator";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -55,7 +57,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-    return <Outlet />;
+    const navigation = useNavigation()
+    const isNavigating = Boolean(navigation.location)
+    return (
+        <>
+            {isNavigating && <LoadingIndicator />}
+            <Outlet />
+        </>
+    );;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
