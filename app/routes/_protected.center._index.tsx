@@ -290,7 +290,6 @@ export default function Page() {
                                         teamName={center.team_name || "No Team Assigned"}
                                     />
                                 ))}
-                                <DataCenterCardSkeleton />
                             </div>
                         )
                     }
