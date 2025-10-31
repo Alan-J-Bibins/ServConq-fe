@@ -57,14 +57,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-    const navigation = useNavigation()
-    const isNavigating = Boolean(navigation.location)
-    return (
-        <>
-            {isNavigating && <LoadingIndicator />}
-            <Outlet />
-        </>
-    );;
+    return ( <Outlet />);
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

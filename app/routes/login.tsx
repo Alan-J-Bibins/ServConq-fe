@@ -48,7 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const session = await serverSessionStorage.getSession();
     session.set("token", token);
 
-    return redirect("/dashboard", {
+    return redirect("/center", {
         headers: {
             "Set-Cookie": await serverSessionStorage.commitSession(session),
         },

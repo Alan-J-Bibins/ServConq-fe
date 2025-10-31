@@ -4,12 +4,14 @@ import {
     useLoaderData,
     type LoaderFunctionArgs,
     type ActionFunctionArgs,
+    Await,
 } from "react-router";
 import CustomDialog from "~/components/Dialog";
 import DataCenterCard from "~/components/DataCenterCard";
 import { serverSessionStorage } from "~/session.server";
-import { Listbox, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Listbox, ListboxOption, Transition } from "@headlessui/react";
+import { Fragment, Suspense, useState } from "react";
+import DataCenterCardSkeleton from "~/components/skeleton/DataCenterCardSkeleton";
 
 // Type definition for one Data Center entry
 export type DataCenterEntry = {
@@ -26,42 +28,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const session = await serverSessionStorage.getSession(request.headers.get("Cookie"));
     const token = session.get("token");
 
-    try {
-        // Fetch both data centers and teams in parallel
-        const [dataCenterRes, teamRes] = await Promise.all([
-            fetch(`${process.env.API_URL}/dataCenter`, {
-                headers: { Authorization: `Bearer ${token}` },
-            }),
-            fetch(`${process.env.API_URL}/team`, {
-                headers: { Authorization: `Bearer ${token}` },
-            }),
-        ]);
-
-        // Handle data center response
-        if (!dataCenterRes.ok) {
-            return {
-                dataCenters: [],
-                teamList: [],
-                errorMessage: `Failed to load Data Centers (${dataCenterRes.status})`,
-            };
-        }
-
-        // Handle team response
-        if (!teamRes.ok) {
-            return {
-                dataCenters: [],
-                teamList: [],
-                errorMessage: `Failed to load Teams (${teamRes.status})`,
-            };
-        }
-
-        const [dataCenterJson, teamJson] = await Promise.all([
-            dataCenterRes.json(),
-            teamRes.json(),
-        ]);
-
-        // Normalize Data Centers
-        const dataCenters: DataCenterEntry[] = (dataCenterJson.datacenters || []).map((dc: any) => ({
+    // Don't await, just create promises and return them via defer
+    const dataCenterPromise = fetch(`${process.env.API_URL}/dataCenter`, {
+        headers: { Authorization: `Bearer ${token}` },
+    }).then(async (res) => {
+        if (!res.ok) throw new Error(`Failed to load Data Centers (${res.status})`);
+        const json = await res.json();
+        return (json.datacenters || []).map((dc: any) => ({
             id: dc.id,
             name: dc.name,
             description: dc.description,
@@ -69,26 +42,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
             team_id: dc.team_id,
             team_name: dc.team_name,
         }));
+    });
 
-        // Normalize Team List
-        const teamList = (teamJson.teamList || []).map((entry: any) => ({
+    const teamPromise = fetch(`${process.env.API_URL}/team`, {
+        headers: { Authorization: `Bearer ${token}` },
+    }).then(async (res) => {
+        if (!res.ok) throw new Error(`Failed to load Teams (${res.status})`);
+        const json = await res.json();
+        return (json.teamList || []).map((entry: any) => ({
             id: entry.team.id,
             name: entry.team.name,
         }));
+    });
 
-        return {
-            dataCenters,
-            teamList,
-            errorMessage: null,
-        };
-    } catch (err) {
-        console.error("❌ Loader failed:", err);
-        return {
-            dataCenters: [],
-            teamList: [],
-            errorMessage: "Unable to reach server",
-        };
-    }
+    return { dataCenterPromise, teamPromise }
 };
 
 
@@ -146,11 +113,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 // 🧱 PAGE COMPONENT
 export default function Page() {
-    const { dataCenters, teamList, errorMessage } = useLoaderData<{
-        dataCenters: DataCenterEntry[];
-        teamList: { id: string; name: string }[];
-        errorMessage: string | null;
-    }>();
+    const { dataCenterPromise, teamPromise } = useLoaderData() as {
+        dataCenterPromise: Promise<DataCenterEntry[]>;
+        teamPromise: Promise<{ id: string; name: string }[]>;
+    };
+
     const [selectedTeam, setSelectedTeam] = useState<{ id: string; name: string } | null>(null);
 
 
@@ -211,11 +178,16 @@ export default function Page() {
                         />
 
                         <label>Team</label>
-                        <Listbox value={selectedTeam} onChange={setSelectedTeam}>
-                            <div className="relative mt-1">
-                                {/* Button */}
-                                <Listbox.Button
-                                    className="
+                        <Suspense fallback={
+                            <input placeholder="Select a Team" disabled/>
+                        }>
+                            <Await resolve={teamPromise}>
+                                {(teamList) => (
+                                    <Listbox value={selectedTeam} onChange={setSelectedTeam}>
+                                        <div className="relative">
+                                            {/* Button */}
+                                            <Listbox.Button
+                                                className="
                                     bg-secondary/20
                                     border border-primary/40
                                     text-primary
@@ -233,48 +205,51 @@ export default function Page() {
                                     cursor-pointer
                                     flex justify-between items-center
                                   "
-                                >
-                                    {selectedTeam ? selectedTeam.name : "Select a Team"}
-                                    <ChevronDown size={18} className="text-primary ml-2" />
-                                </Listbox.Button>
-
-                                {/* Dropdown Options */}
-                                <Transition
-                                    as={Fragment}
-                                    leave="transition ease-in duration-100"
-                                    leaveFrom="opacity-100"
-                                    leaveTo="opacity-0"
-                                >
-                                    <Listbox.Options
-                                        className="
-                                          absolute mt-2 w-full
-                                          bg-secondary/20
-                                          border border-primary/40
-                                          rounded-2xl
-                                          shadow-lg
-                                          backdrop-blur-md
-                                          text-primary
-                                          max-h-60 overflow-auto
-                                          focus:outline-none
-                                          z-10
-                                        "
-                                    >
-                                        {teamList.map((team) => (
-                                            <Listbox.Option
-                                                key={team.id}
-                                                value={team}
-                                                className={({ active }) =>
-                                                    `cursor-pointer select-none px-4 py-2 rounded-xl ${active ? "bg-primary/30 text-primary font-semibold" : "text-primary"
-                                                    }`
-                                                }
                                             >
-                                                {team.name}
-                                            </Listbox.Option>
-                                        ))}
-                                    </Listbox.Options>
-                                </Transition>
-                            </div>
-                        </Listbox>
+                                                {selectedTeam ? selectedTeam.name : "Select a Team"}
+                                                <ChevronDown size={18} className="text-primary ml-2" />
+                                            </Listbox.Button>
+
+                                            {/* Dropdown Options */}
+                                            <Transition
+                                                as={Fragment}
+                                                leave="transition ease-in duration-100"
+                                                leaveFrom="opacity-100"
+                                                leaveTo="opacity-0"
+                                            >
+                                                <Listbox.Options
+                                                    className="
+                                                absolute mt-2 w-full
+                                                bg-secondary/20
+                                                border border-primary/40
+                                                rounded-2xl
+                                                shadow-lg
+                                                backdrop-blur-md
+                                                text-primary
+                                                max-h-60 overflow-auto
+                                                focus:outline-none
+                                                z-10
+                                                "
+                                                >
+                                                    {teamList.map((team) => (
+                                                        <Listbox.Option
+                                                            key={team.id}
+                                                            value={team}
+                                                            className={({ active }) =>
+                                                                `cursor-pointer select-none px-4 py-2 rounded-xl ${active ? "bg-primary/30 text-primary font-semibold" : "text-primary"
+                                                                }`
+                                                            }
+                                                        >
+                                                            {team.name}
+                                                        </Listbox.Option>
+                                                    ))}
+                                                </Listbox.Options>
+                                            </Transition>
+                                        </div>
+                                    </Listbox>
+                                )}
+                            </Await>
+                        </Suspense>
 
                         {/* Hidden input so form submission still includes team ID */}
                         <input type="hidden" name="teamId" value={selectedTeam?.id || ""} />
@@ -288,32 +263,66 @@ export default function Page() {
                 </CustomDialog>
             </div>
 
-            {/* ERROR / EMPTY / DATA DISPLAY */}
-            {errorMessage ? (
-                <div className="text-accent-500 flex justify-center w-full items-center gap-2">
-                    <OctagonAlert size={48} />
-                    <span className="text-2xl">{errorMessage}</span>
-                </div>
-            ) : dataCenters.length === 0 ? (
-                <div className="text-secondary flex justify-center w-full items-center gap-2">
-                    <OctagonAlert size={48} />
-                    <span className="text-4xl">
-                        Create a Data Center to get started
-                    </span>
-                </div>
-            ) : (
+            <Suspense fallback={
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4">
-                    {dataCenters.map((center) => (
-                        <DataCenterCard
-                            key={center.name}
-                            id={center.id}
-                            name={center.name}
-                            serversRunning="5/5"
-                            teamName={center.team_name || "No Team Assigned"}
-                        />
+                    {Array.from({ length: 4 }).map((_, i) => (
+                        <DataCenterCardSkeleton key={i} />
                     ))}
                 </div>
-            )}
+            }>
+                <Await resolve={dataCenterPromise} errorElement={<div>Error loading data centers</div>}>
+                    {(dataCenters) =>
+                        dataCenters.length === 0 ? (
+                            <div className="text-secondary flex justify-center w-full items-center gap-2">
+                                <OctagonAlert size={48} />
+                                <span className="text-4xl">
+                                    Create a Data Center to get started
+                                </span>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4">
+                                {dataCenters.map((center) => (
+                                    <DataCenterCard
+                                        key={center.id}
+                                        id={center.id}
+                                        name={center.name}
+                                        serversRunning="5/5"
+                                        teamName={center.team_name || "No Team Assigned"}
+                                    />
+                                ))}
+                                <DataCenterCardSkeleton />
+                            </div>
+                        )
+                    }
+                </Await>
+            </Suspense>
+
+            {/* ERROR / EMPTY / DATA DISPLAY  */}
+            {/* {errorMessage ? ( */}
+            {/*     <div className="text-accent-500 flex justify-center w-full items-center gap-2"> */}
+            {/*         <OctagonAlert size={48} /> */}
+            {/*         <span className="text-2xl">{errorMessage}</span> */}
+            {/*     </div> */}
+            {/* ) : dataCenters.length === 0 ? ( */}
+            {/*     <div className="text-secondary flex justify-center w-full items-center gap-2"> */}
+            {/*         <OctagonAlert size={48} /> */}
+            {/*         <span className="text-4xl"> */}
+            {/*             Create a Data Center to get started */}
+            {/*         </span> */}
+            {/*     </div> */}
+            {/* ) : ( */}
+            {/*     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4"> */}
+            {/*         {dataCenters.map((center) => ( */}
+            {/*             <DataCenterCard */}
+            {/*                 key={center.name} */}
+            {/*                 id={center.id} */}
+            {/*                 name={center.name} */}
+            {/*                 serversRunning="5/5" */}
+            {/*                 teamName={center.team_name || "No Team Assigned"} */}
+            {/*             /> */}
+            {/*         ))} */}
+            {/*     </div> */}
+            {/* )} */}
         </main>
     );
 }

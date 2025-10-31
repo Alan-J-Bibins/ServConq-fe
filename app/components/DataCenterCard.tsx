@@ -17,7 +17,7 @@ export default function DataCenterCard({
 }: DataCenterCardProps) {
     return (
         <Link
-            to={`/center/${id}/configure`}
+            to={`/center/${id}/overview`}
             className="flex flex-col justify-start items-start gap-2 p-4
             bg-secondary/10 border border-secondary rounded-2xl h-full w-full
             relative overflow-hidden group shadow-custom shadow-primary/25

@@ -1,6 +1,6 @@
 export default function Page() {
     return (
-        <div>Configure Section</div>
+        <div>Overview Section</div>
     )
 }
 
