@@ -1,0 +1,31 @@
+Invoke-RestMethod -Method POST `
+  -Uri "https://g5e43m1f1k.execute-api.eu-north-1.amazonaws.com/dev/complaints" `
+  -Body '{"customerId":"USER#001","description":"AC not working","pincode":"560001"}' `
+  -ContentType "application/json"
+
+pool id
+eu-north-1_62K9Emdng
+
+client id
+7561dluv913i7gb8h6qhglprn4
+
+
+74a6129d34b94dec8fdd249d56e503ac
+
+GET http://localhost:3000/dataCenter
+Authorization: Bearer 74a6129d34b94dec8fdd249d56e503ac
+
+$body = @{
+  email = "nadeem30604@gmail.com"
+  password = "Nadeem@30604420"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://localhost:3000/login" -Method Post -Body $body -Headers @{"Content-Type" = "application/json"}
+
+
+ Rosario Central está classificado para a Libertadores 2026.
+
+🚨 Rosario Central está classificado para a Libertadores 2026.
+
+Ángel Di María disputará a principal competição do continente pela primeira vez. ABSURDO! 
+
