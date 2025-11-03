@@ -32,7 +32,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const dataCenterPromise = fetch(`${process.env.API_URL}/dataCenter`, {
         headers: { Authorization: `Bearer ${token}` },
     }).then(async (res) => {
-        if (!res.ok) throw new Error(`Failed to load Data Centers (${res.status})`);
+        if (!res.ok) return [];
         const json = await res.json();
         return (json.datacenters || []).map((dc: any) => ({
             id: dc.id,
@@ -47,7 +47,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const teamPromise = fetch(`${process.env.API_URL}/team`, {
         headers: { Authorization: `Bearer ${token}` },
     }).then(async (res) => {
-        if (!res.ok) throw new Error(`Failed to load Teams (${res.status})`);
+        if (!res.ok) return [];
         const json = await res.json();
         return (json.teamList || []).map((entry: any) => ({
             id: entry.team.id,
@@ -119,6 +119,7 @@ export default function Page() {
     };
 
     const [selectedTeam, setSelectedTeam] = useState<{ id: string; name: string } | null>(null);
+    const [connectionError, setConnectionError] = useState<string | null>(null);
 
 
 
@@ -179,9 +180,13 @@ export default function Page() {
 
                         <label>Team</label>
                         <Suspense fallback={
-                            <input placeholder="Select a Team" disabled/>
+                            <input placeholder="Select a Team" disabled />
                         }>
-                            <Await resolve={teamPromise}>
+                            <Await
+                                errorElement={
+                                    <div>Failed to Load Teams</div>
+                                }
+                                resolve={teamPromise}>
                                 {(teamList) => (
                                     <Listbox value={selectedTeam} onChange={setSelectedTeam}>
                                         <div className="relative">

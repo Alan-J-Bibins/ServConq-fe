@@ -6,7 +6,15 @@ type Team = {
 
 type TeamListEntry = {
     userId: string,
-    role: "OWNER" | "VIEWER" | "ADMIN" | "OPERATOR",
+    role: "OWNER" |  "ADMIN" | "OPERATOR",
     team: Team
     memberCount: number
+}
+
+type TeamMember = {
+    id: string,
+    userId: string,
+    teamId: string,
+    role: "OWNER" | "ADMIN" | "OPERATOR",
+    joinedAt: Date
 }

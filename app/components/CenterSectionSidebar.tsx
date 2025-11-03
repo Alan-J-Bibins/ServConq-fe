@@ -7,7 +7,7 @@ export default function CenterSectionSidebar() {
 
     return (
         <div className="flex flex-col items-center gap-4 p-4 border-r border-r-secondary bg-background/25 motion-preset-blur-right">
-            <h3 className="tracking-custom text-accent uppercase text-shadow-accent/25 text-shadow-lg"> Data Center Ops </h3>
+            <h3 className="tracking-custom text-accent uppercase text-shadow-accent/25 text-shadow-lg text-nowrap"> Data Center Ops </h3>
             <CenterSectionSidebarItem to={`/center/${centerId}/overview`}>Overview</CenterSectionSidebarItem>
             <CenterSectionSidebarItem to={`/center/${centerId}/logs`}>Logs</CenterSectionSidebarItem>
             <CenterSectionSidebarItem to={`/center/${centerId}/settings`}>Settings</CenterSectionSidebarItem>

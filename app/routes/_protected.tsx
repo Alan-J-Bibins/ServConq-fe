@@ -7,6 +7,7 @@ import { serverSessionStorage } from "~/session.server";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const session = await serverSessionStorage.getSession(request.headers.get("Cookie"));
     const token = session.get("token");
+    console.log("[app/routes/_protected.tsx:9] token = ", token)
     if (!token) {
         return redirect("/login", {
             headers: {
