@@ -56,15 +56,25 @@ export default function ServerTerminal({ centerId, serverId }: { centerId: strin
             }}
         >
             {terminalMessages.map((message, index) => {
+                if (message.type === "breaker") {
+                    return (
+                        <span key={index}>
+                            <br />
+                            <hr className="border-secondary" />
+                            <br />
+                        </span>
+                    );
+                }
+                if (message.type === "output") {
+                    return (
+                        <pre key={index} className="text-text whitespace-pre overflow-x-auto">
+                            {message.content}
+                        </pre>
+                    );
+                }
                 return (
-                    <span key={index} className={`${message.type === "error" ? "text-accent" : message.type === "input" ? "text-primary" : "text-text"}`}>
-                        {message.type === 'breaker' ? (
-                            <>
-                                <br />
-                                <hr className="border-secondary" />
-                                <br />
-                            </>
-                        ) : message.content}
+                    <span key={index} className={message.type === "error" ? "text-accent" : message.type === "input" ? "text-primary" : "text-text"}>
+                        {message.content}
                     </span>
                 );
             })}

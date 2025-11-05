@@ -93,7 +93,7 @@ export default function CustomDialog({
                         onClick={(e: MouseEvent) => {
                             e.stopPropagation();
                         }}
-                        className={`motion-duration-150  bg-background/80 border border-primary/20 p-4 min-w-xl max-w-3xl max-h-3/4 rounded-2xl flex flex-col gap-4
+                        className={`motion-duration-150  bg-background/80 border border-primary/20 p-4 min-w-xl max-w-1/2 max-h-3/4 rounded-2xl flex flex-col gap-4
                         shadow-custom shadow-secondary/25
                         ${isExiting ? 'motion-scale-out-75 motion-opacity-out-0' : 'motion-scale-in-75 motion-opacity-in-0'}
                         `}
