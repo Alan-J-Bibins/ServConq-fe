@@ -26,7 +26,7 @@ export default function Layout() {
     return (
         <main className="w-full h-full flex flex-col justify-start items-start">
             <Header initialTheme={theme} />
-            <div className="flex items-start justify-start h-full w-full">
+            <div className="flex items-start justify-start h-full w-full flex-1 overflow-auto">
                 <Sidebar />
                 <div className="bg-secondary/10 w-full h-full">
                     <Outlet />

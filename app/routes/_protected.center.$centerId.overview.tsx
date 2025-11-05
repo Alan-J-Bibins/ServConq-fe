@@ -158,7 +158,7 @@ export default function Page() {
         serverPromise: Promise<{ id: string; hostname: string }[]>;
     }
     return (
-        <div className="p-4 w-full flex flex-col gap-4 overflow-hidden">
+        <div className="p-4 w-full flex flex-col gap-4 overflow-auto">
             <div className="flex items-center w-full gap-2">
                 <h1 className="text-3xl font-bold text-nowrap">Servers</h1>
                 <hr className="w-full border-secondary" />
