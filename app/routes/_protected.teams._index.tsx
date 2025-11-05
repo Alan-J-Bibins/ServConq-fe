@@ -163,10 +163,12 @@ export default function Page() {
     const actionData = useActionData() as any;
 
     const ownedTeams: TeamListEntry[] = teamList.filter((t) =>
-        ["OWNER", "ADMIN", "OPERATOR"].includes(t.role),
+        ["OWNER"].includes(t.role),
     );
 
-    const joinedTeams: TeamListEntry[] = [];      // no viewer role now
+    const joinedTeams: TeamListEntry[] = teamList.filter((t) =>
+        ["ADMIN", "OPERATOR"].includes(t.role),
+    );      // no viewer role now
 
     return (
         <main className="p-4 flex flex-col w-full h-full justify-start items-start gap-4">
@@ -230,7 +232,7 @@ export default function Page() {
 
             {/* -------------------- JOIN TEAM -------------------- */}
             <section className="flex items-center w-full gap-2 mt-10">
-                <h1 className="text-3xl font-bold text-nowrap">Join a Team</h1>
+                <h1 className="text-3xl font-bold text-nowrap">Joined Teams</h1>
                 <hr className="w-full border-secondary" />
 
                 <CustomDialog
