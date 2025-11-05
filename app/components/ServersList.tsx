@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import CustomDialog from "./Dialog";
 import { Form } from "react-router";
+import { Pencil, Trash2 } from "lucide-react";
+
 
 type ServerMetrics = {
     pid: {
@@ -80,55 +82,87 @@ export default function ServersList({
                     <div key={server.id} className="flex flex-col gap-4 p-4 bg-secondary/20 rounded-2xl border border-secondary">
                         <div className="flex justify-between items-center w-full">
                             <span className="text-3xl font-bold text-primary"> {server.hostname} </span>
-                            <CustomDialog
-                                title="Edit Server"
-                                trigger={
-                                    <button className="clickable">Edit</button>
-                                }
-                                submit={
-                                    <button
-                                        type="submit"
-                                        form="editServerForm"
-                                        className="clickable"
-                                    >
-                                        Submit
-                                    </button>
-                                }
-                                cancel={
-                                    <></>
-                                }
-                            >
-                                <Form
-                                    id="editServerForm"
-                                    method="PATCH"
-                                    action={`/center/${centerId}/overview`}
-                                    className="flex flex-col gap-4"
+                            <div className="flex justify-center gap-2">
+                                <CustomDialog
+                                    title="Delete Server"
+                                    trigger={
+                                        <button className="clickableButAccent" >
+                                            <Trash2 size={20} />
+                                        </button>
+                                    }
+                                    submit={
+                                        <button
+                                            type="submit"
+                                            form="deleteServerForm"
+                                            className="clickableButAccent"
+                                        >
+                                            Confirm
+                                        </button>
+                                    }
+                                    cancel={
+                                        <button className="clickable">Cancel</button>
+                                    }
                                 >
-                                    <label>Hostname</label>
-                                    <input
-                                        type="text"
-                                        name="editServerHostname"
-                                        required
-                                        defaultValue={server.hostname}
-                                    />
-                                    <label>Connection String</label>
-                                    <input
-                                        type="text"
-                                        name="editServerConnectionString"
-                                        placeholder="Leave Empty to continue using current connection string"
-                                    />
-                                    <input
-                                        name="editServerId"
-                                        readOnly hidden
-                                        value={server.id}
-                                    />
-                                    <input
-                                        name="actionType"
-                                        readOnly hidden
-                                        value={"editServer"}
-                                    />
-                                </Form>
-                            </CustomDialog>
+                                    <Form
+                                        id="deleteServerForm"
+                                        method="DELETE"
+                                        action={`/center/${centerId}/overview`}
+                                    >
+                                        <label>Permanently Delete the Server?</label>
+                                        <input name="actionType" value="deleteServer" readOnly hidden />
+                                        <input name="deleteServerId" value={server.id} readOnly hidden />
+                                    </Form>
+                                </CustomDialog>
+                                <CustomDialog
+                                    title="Edit Server"
+                                    trigger={
+                                        <button className="clickable"><Pencil size={20} /></button>
+                                    }
+                                    submit={
+                                        <button
+                                            type="submit"
+                                            form="editServerForm"
+                                            className="clickable"
+                                        >
+                                            Submit
+                                        </button>
+                                    }
+                                    cancel={
+                                        <></>
+                                    }
+                                >
+                                    <Form
+                                        id="editServerForm"
+                                        method="PATCH"
+                                        action={`/center/${centerId}/overview`}
+                                        className="flex flex-col gap-4"
+                                    >
+                                        <label>Hostname</label>
+                                        <input
+                                            type="text"
+                                            name="editServerHostname"
+                                            required
+                                            defaultValue={server.hostname}
+                                        />
+                                        <label>Connection String</label>
+                                        <input
+                                            type="text"
+                                            name="editServerConnectionString"
+                                            placeholder="Leave Empty to continue using current connection string"
+                                        />
+                                        <input
+                                            name="editServerId"
+                                            readOnly hidden
+                                            value={server.id}
+                                        />
+                                        <input
+                                            name="actionType"
+                                            readOnly hidden
+                                            value={"editServer"}
+                                        />
+                                    </Form>
+                                </CustomDialog>
+                            </div>
                         </div>
                         <div className="flex flex-col">
                             <span className="text-primary">CPU Usage</span>

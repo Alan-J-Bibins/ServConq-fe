@@ -47,7 +47,8 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     }
 }
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+    const centerId = params.centerId;
     const formData = await request.formData();
     const actionType = String(formData.get("actionType"))
     const userToken = await getUserToken(request);
@@ -82,6 +83,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             } catch (error) {
                 console.log("OOPs: ", error)
             }
+            break;
         }
         case "editServer": {
             const editServerHostname = formData.get("editServerHostname");
@@ -104,6 +106,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             } catch (error) {
                 console.log("AH HSIT: ", error)
             }
+            break;
+        }
+        case "deleteServer": {
+            const serverId = formData.get("deleteServerId")
+            try {
+                const res = await fetch(`${process.env.API_URL}/dataCenter/${centerId}/server/${serverId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${userToken}`
+                    },
+                })
+                console.log("[app/routes/_protected.center.$centerId.overview.tsx:112] res = ", res)
+            } catch (error) {
+                console.log("AH HSIT: ", error)
+            }
+            break;
         }
     }
 }
