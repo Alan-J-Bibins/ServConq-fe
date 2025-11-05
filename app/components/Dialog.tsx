@@ -11,13 +11,17 @@ export default function CustomDialog({
     cancel,
     title,
     triggerClassname,
+    considerFetcherSubmission = true,
+    considerFormSubmission = true,
 }: {
     children: ReactNode,
     trigger: ReactNode,
-    submit: ReactNode,
-    cancel: ReactNode,
+    submit?: ReactNode,
+    cancel?: ReactNode,
     title: string,
     triggerClassname?: string
+    considerFetcherSubmission?: boolean
+    considerFormSubmission?: boolean
 }) {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -41,10 +45,17 @@ export default function CustomDialog({
     }, [])
 
     useEffect(() => {
-        if (isOpen && (navigation.state === 'submitting' || fetchers.some(f => f.state === 'submitting'))) {
-            handleClose();
+        if (isOpen) {
+            if (considerFormSubmission && navigation.state === 'submitting') {
+                handleClose();
+                return;
+            }
+            if (considerFetcherSubmission && fetchers.some(f => f.state === 'submitting')) {
+                handleClose();
+                return;
+            }
         }
-    })
+    }, [navigation.state, fetchers, isOpen, considerFetcherSubmission, considerFormSubmission]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -95,14 +106,18 @@ export default function CustomDialog({
 
                         </div>
                         {children}
-                        <br />
+                        {(submit || cancel) && <br />}
                         <div className="flex items-center gap-2 flex-row-reverse">
-                            <div>
-                                {submit}
-                            </div>
-                            <div onClick={handleClose}>
-                                {cancel}
-                            </div>
+                            {submit &&
+                                <div>
+                                    {submit}
+                                </div>
+                            }
+                            {cancel &&
+                                <div onClick={handleClose}>
+                                    {cancel}
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

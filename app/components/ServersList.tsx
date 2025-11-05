@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import CustomDialog from "./Dialog";
 import { Form } from "react-router";
 import { Pencil, SquareTerminal, Terminal, Trash2 } from "lucide-react";
+import ServerTerminal from "./ServerTerminal";
 
 
 type ServerMetrics = {
@@ -182,21 +183,14 @@ export default function ServersList({
                                         Terminal
                                     </button>
                                 }
-                                submit={
-                                    <></>
-                                }
-                                cancel={
-                                    <></>
-                                }
                                 title="Terminal"
+                                considerFetcherSubmission={false}
+                                considerFormSubmission={false}
                             >
-                                <Form
-                                    className="min-w-1/2 min-h-1/2"
-                                >
-                                    <textarea 
-                                        className="inpu"
-                                    />
-                                </Form>
+                                <ServerTerminal
+                                    serverId={server.id}
+                                    centerId={centerId}
+                                />
                             </CustomDialog>
                         </div>
                     </div>

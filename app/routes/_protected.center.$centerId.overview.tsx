@@ -123,6 +123,31 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             }
             break;
         }
+        case "runCommand": {
+            const serverId = String(formData.get("serverId"))
+            const command = String(formData.get("command"))
+            try {
+                const res = await fetch(`${process.env.API_URL}/run/${serverId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        command: command
+                    })
+                })
+
+                if (!res.ok) {
+                    throw new Error("Command execution failed");
+                }
+                const json = await res.json();
+                console.log("[app/routes/_protected.center.$centerId.overview.tsx:143] json.response = ", json.response)
+                return { output: json.response.output, error: json.response.error };
+
+            } catch (error) {
+                return { output: null, error: `${error}` };
+            }
+        }
     }
 }
 
@@ -150,9 +175,6 @@ export default function Page() {
                         >
                             Submit
                         </button>
-                    }
-                    cancel={
-                        <></>
                     }
                 >
                     <Form
