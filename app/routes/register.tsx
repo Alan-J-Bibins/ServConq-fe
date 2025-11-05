@@ -71,28 +71,28 @@ export default function Page() {
                     action="/register"
                 >
                     <label>Name </label>
-                    <input
+                    <input className="inputField"
                         name="userFullName"
                         type="text"
                         placeholder="Enter Your Name"
                         required
                     />
                     <label>Email </label>
-                    <input
+                    <input className="inputField"
                         name="userEmail"
                         type="email"
                         placeholder="Enter Your Email"
                         required
                     />
                     <label>Password </label>
-                    <input
+                    <input className="inputField"
                         name="userPassword"
                         type="password"
                         placeholder="Enter Your Password"
                         required
                     />
                     <label>Confirm Password </label>
-                    <input
+                    <input className="inputField"
                         name="userPasswordConfirm"
                         type="password"
                         placeholder="Enter Your Password Again"

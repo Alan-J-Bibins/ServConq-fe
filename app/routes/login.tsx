@@ -72,14 +72,14 @@ export default function Page() {
                     className="flex flex-col gap-4"
                 >
                     <label>Email </label>
-                    <input
+                    <input className="inputField"
                         name="userEmail"
                         type="email"
                         placeholder="Enter Email"
                         required
                     />
                     <label>Password </label>
-                    <input
+                    <input className="inputField"
                         name="userPassword"
                         type="password"
                         placeholder="Enter Password"

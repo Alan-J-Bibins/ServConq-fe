@@ -156,7 +156,7 @@ export default function Page() {
                         className="flex flex-col gap-2"
                     >
                         <label>Data Center Name</label>
-                        <input
+                        <input className="inputField"
                             required
                             name="centerName"
                             type="text"
@@ -164,7 +164,7 @@ export default function Page() {
                         />
 
                         <label>Location</label>
-                        <input
+                        <input className="inputField"
                             required
                             name="centerLocation"
                             type="text"
@@ -259,6 +259,7 @@ export default function Page() {
                         {/* Hidden input so form submission still includes team ID */}
                         <input type="hidden" name="teamId" value={selectedTeam?.id || ""} />
                         <input
+                            className="inputField"
                             hidden
                             readOnly
                             name="actionType"

@@ -164,13 +164,14 @@ export default function Page() {
                     >
                         <label>Hostname</label>
                         <input
+                            className="inputField"
                             required
                             type="text"
                             name="newServerHostname"
                             placeholder="Enter Server Name"
                         />
                         <label>Connection String</label>
-                        <input
+                        <input className="inputField"
                             required
                             type="text"
                             name="newServerConnectionString"

@@ -208,13 +208,13 @@ export default function Page() {
                         className="flex flex-col gap-2"
                     >
                         <label>Team Name</label>
-                        <input required name="teamName" type="text" placeholder="Enter Team Name" />
+                        <input className="inputField" required name="teamName" type="text" placeholder="Enter Team Name" />
 
                         <label>Description</label>
                         <textarea
                             name="teamDescription"
                             placeholder="Enter Team Description"
-                            className="resize-y h-28"
+                            className="resize-y h-28 inputField"
                         />
 
                         <input hidden readOnly name="actionType" value="newTeam" />
@@ -256,7 +256,7 @@ export default function Page() {
                         className="flex flex-col gap-2"
                     >
                         <label>Team Token</label>
-                        <input required name="teamToken" type="text" placeholder="Enter Team Token" />
+                        <input className="inputField" required name="teamToken" type="text" placeholder="Enter Team Token" />
 
                         <input hidden readOnly name="actionType" value="joinTeam" />
                     </Form>

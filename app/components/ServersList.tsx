@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CustomDialog from "./Dialog";
 import { Form } from "react-router";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, SquareTerminal, Terminal, Trash2 } from "lucide-react";
 
 
 type ServerMetrics = {
@@ -79,9 +79,21 @@ export default function ServersList({
                 const osRam = latestBatch?.[server.id]?.metrics?.os.ram;
                 const osTotalRam = latestBatch?.[server.id]?.metrics?.os.total_ram;
                 return (
-                    <div key={server.id} className="flex flex-col gap-4 p-4 bg-secondary/20 rounded-2xl border border-secondary">
-                        <div className="flex justify-between items-center w-full">
-                            <span className="text-3xl font-bold text-primary"> {server.hostname} </span>
+                    <div key={server.id} className="flex justify-between gap-4 p-4 bg-secondary/20 rounded-2xl border border-secondary">
+                        <div className="flex flex-col h-full gap-4 items-start">
+                            <div className="flex justify-between items-center w-full">
+                                <span className="text-3xl font-bold text-primary"> {server.hostname} </span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-primary">CPU Usage</span>
+                                <span className="text-4xl font-bold">{osCpu?.toFixed(2)} %</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-primary">RAM Usage:</span>
+                                <span className="text-4xl font-bold">{formatBytes(osRam || 0, 2)} / {formatBytes(Math.ceil(osTotalRam || 0), 2)}</span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-4 justify-between items-end">
                             <div className="flex justify-center gap-2">
                                 <CustomDialog
                                     title="Delete Server"
@@ -138,24 +150,24 @@ export default function ServersList({
                                         className="flex flex-col gap-4"
                                     >
                                         <label>Hostname</label>
-                                        <input
+                                        <input className="inputField"
                                             type="text"
                                             name="editServerHostname"
                                             required
                                             defaultValue={server.hostname}
                                         />
                                         <label>Connection String</label>
-                                        <input
+                                        <input className="inputField"
                                             type="text"
                                             name="editServerConnectionString"
                                             placeholder="Leave Empty to continue using current connection string"
                                         />
-                                        <input
+                                        <input className="inputField"
                                             name="editServerId"
                                             readOnly hidden
                                             value={server.id}
                                         />
-                                        <input
+                                        <input className="inputField"
                                             name="actionType"
                                             readOnly hidden
                                             value={"editServer"}
@@ -163,14 +175,29 @@ export default function ServersList({
                                     </Form>
                                 </CustomDialog>
                             </div>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-primary">CPU Usage</span>
-                            <span className="text-4xl font-bold">{osCpu?.toFixed(2)} %</span>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-primary">RAM Usage:</span>
-                            <span className="text-4xl font-bold">{formatBytes(osRam || 0, 2)} / {formatBytes(Math.ceil(osTotalRam || 0), 2)}</span>
+                            <CustomDialog
+                                trigger={
+                                    <button className="clickable flex gap-2 items-center">
+                                        <SquareTerminal size={20} />
+                                        Terminal
+                                    </button>
+                                }
+                                submit={
+                                    <></>
+                                }
+                                cancel={
+                                    <></>
+                                }
+                                title="Terminal"
+                            >
+                                <Form
+                                    className="min-w-1/2 min-h-1/2"
+                                >
+                                    <textarea 
+                                        className="inpu"
+                                    />
+                                </Form>
+                            </CustomDialog>
                         </div>
                     </div>
                 );
