@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Await, Form, useLoaderData, type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
 import CustomDialog from "~/components/Dialog";
 import ServersList from "~/components/ServersList";
+import ServerListEntrySkeleton from "~/components/skeleton/ServerListEntrySkeleton";
 import { getUserToken } from "~/utils/helpers";
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
@@ -206,7 +207,11 @@ export default function Page() {
                 </CustomDialog>
             </div>
             <Suspense fallback={
-                <div>Loading man</div>
+                <div className="w-full flex gap-4 flex-col">
+                    {Array.from({ length: 2 }).map((_, i) => (
+                        <ServerListEntrySkeleton key={i} />
+                    ))}
+                </div>
             }>
                 <Await resolve={serverPromise} errorElement={<div>Failed to load servers</div>}>
                     {(servers) => {
