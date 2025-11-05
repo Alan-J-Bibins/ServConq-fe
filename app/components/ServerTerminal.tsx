@@ -7,9 +7,9 @@ export default function ServerTerminal({ centerId, serverId }: { centerId: strin
 
     const isSubmitting = terminalFetcher.state !== "idle";
 
-    // Append output to messages when fetcher data updates
     useEffect(() => {
-        if (terminalFetcher.data?.output) {
+        console.log("[app/components/ServerTerminal.tsx:11] terminalFetcher.data?.output = ", terminalFetcher.data)
+        if (terminalFetcher.data?.output !== undefined) {
             setTerminalMessages(prev => [...prev, { content: terminalFetcher.data.output, type: "output" }]);
             setTerminalMessages(prev => [...prev, { content: terminalFetcher.data.error, type: "error" }]);
             setTerminalMessages(prev => [...prev, { content: ` `, type: "breaker" }]);
@@ -27,7 +27,7 @@ export default function ServerTerminal({ centerId, serverId }: { centerId: strin
     return (
         <terminalFetcher.Form
             className="w-full rounded-2xl bg-secondary/20 flex flex-col
-            border border-secondary/20 p-4 font-mono"
+            border border-secondary/20 p-4 font-mono overflow-y-scroll"
             onSubmit={(e: FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);

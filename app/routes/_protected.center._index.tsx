@@ -175,7 +175,7 @@ export default function Page() {
                         <textarea
                             name="centerDescription"
                             placeholder="Enter Description"
-                            className="resize-y h-28"
+                            className="resize-y h-28 inputField"
                         />
 
                         <label>Team</label>
@@ -189,7 +189,7 @@ export default function Page() {
                                 resolve={teamPromise}>
                                 {(teamList) => (
                                     <Listbox value={selectedTeam} onChange={setSelectedTeam}>
-                                        <div className="relative">
+                                        <div className="w-full">
                                             {/* Button */}
                                             <Listbox.Button
                                                 className="
@@ -224,14 +224,14 @@ export default function Page() {
                                             >
                                                 <Listbox.Options
                                                     className="
-                                                absolute mt-2 w-full
+                                                absolute mt-2 w-[94%]
                                                 bg-secondary/20
                                                 border border-primary/40
                                                 rounded-2xl
                                                 shadow-lg
                                                 backdrop-blur-md
                                                 text-primary
-                                                max-h-60 overflow-auto
+                                                max-h-60
                                                 focus:outline-none
                                                 z-10
                                                 "

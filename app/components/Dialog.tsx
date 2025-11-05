@@ -93,7 +93,8 @@ export default function CustomDialog({
                         onClick={(e: MouseEvent) => {
                             e.stopPropagation();
                         }}
-                        className={`motion-duration-150  bg-background/80 border border-primary/20 p-4 min-w-xl max-w-3xl rounded-2xl shadow-custom shadow-secondary/25
+                        className={`motion-duration-150  bg-background/80 border border-primary/20 p-4 min-w-xl max-w-3xl max-h-3/4 rounded-2xl flex flex-col gap-4
+                        shadow-custom shadow-secondary/25
                         ${isExiting ? 'motion-scale-out-75 motion-opacity-out-0' : 'motion-scale-in-75 motion-opacity-in-0'}
                         `}
                     >
@@ -105,8 +106,9 @@ export default function CustomDialog({
                             </button>
 
                         </div>
-                        {children}
-                        {(submit || cancel) && <br />}
+                        <div className="flex-1 overflow-y-auto">
+                            {children}
+                        </div>
                         <div className="flex items-center gap-2 flex-row-reverse">
                             {submit &&
                                 <div>
