@@ -5,6 +5,7 @@
 @theme {
     --font-sans: "Funnel Display", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono: "Google Sans Code", monospace;
     --color-text: #f1f2f4;
     --color-background: #030407;
     --color-background2: #0D1324;
