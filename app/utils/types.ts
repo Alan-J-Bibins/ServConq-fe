@@ -6,7 +6,7 @@ type Team = {
 
 type TeamListEntry = {
     userId: string,
-    role: "OWNER" |  "ADMIN" | "OPERATOR",
+    role: "OWNER" | "ADMIN" | "OPERATOR",
     team: Team
     memberCount: number
 }
@@ -17,4 +17,13 @@ type TeamMember = {
     teamId: string,
     role: "OWNER" | "ADMIN" | "OPERATOR",
     joinedAt: Date
+}
+
+type Log = {
+    id: string,
+    dataCenterId: string,
+    teamMemberId: string,
+    teamMember: TeamMember,
+    message: string,
+    createdAt: Date
 }
