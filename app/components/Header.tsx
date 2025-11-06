@@ -54,7 +54,7 @@ function UserDetailsBox() {
     return (
         <div className="relative" ref={dropdownRef}>
             <button
-                className="clickable border-b-secondary/40 hover:border-b-secondary/40 hover:shadow-none"
+                className="clickableButAccent"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <UserRound />
