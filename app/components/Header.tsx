@@ -66,7 +66,7 @@ function UserDetailsBox() {
                     <NavLink to="/profile" className="clickable text-nowrap flex items-center gap-2"><UserRoundPen /> Profile</NavLink>
                     <Form
                         method="POST"
-                        action="/dashboard"
+                        action="/signout"
                         className="w-full"
                     >
                         <button
