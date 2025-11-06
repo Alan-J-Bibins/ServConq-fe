@@ -6,7 +6,6 @@ export default function Sidebar() {
         <aside className="flex flex-col justify-start items-center p-4 gap-4
             h-full border border-transparent border-r-secondary">
             <SidebarItem to="/center" Icon={HardDrive} />
-            <SidebarItem to="/dashboard" Icon={LayoutDashboard} />
             <SidebarItem to="/teams" Icon={UsersRound} />
             <SidebarItem to="/profile" Icon={UserRoundPen} />
         </aside>
