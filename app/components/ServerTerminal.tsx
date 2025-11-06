@@ -4,6 +4,7 @@ import { useFetcher } from "react-router";
 export default function ServerTerminal({ centerId, serverId }: { centerId: string, serverId: string }) {
     const terminalFetcher = useFetcher();
     const [terminalMessages, setTerminalMessages] = useState<{ content: string, type: "output" | "error" | "input" | "breaker" }[]>([]);
+    const [pwd, setPwd] = useState<string>("||$$$HOME$$$||");
 
     const isSubmitting = terminalFetcher.state !== "idle";
 
@@ -14,7 +15,17 @@ export default function ServerTerminal({ centerId, serverId }: { centerId: strin
             setTerminalMessages(prev => [...prev, { content: terminalFetcher.data.error, type: "error" }]);
             setTerminalMessages(prev => [...prev, { content: ` `, type: "breaker" }]);
         }
-    }, [terminalFetcher.data]);
+        if (terminalFetcher.data !== undefined
+            && typeof terminalFetcher.data.pwd === "string"
+            && terminalFetcher.data.pwd !== ""
+            && terminalFetcher.data.pwd != pwd) {
+            setPwd(terminalFetcher.data.pwd)
+        }
+    }, [terminalFetcher.data, setPwd, setTerminalMessages]);
+
+    useEffect(() => {
+        console.log("NEW PWD ", pwd);
+    }, [pwd])
 
     const inputRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
@@ -45,9 +56,24 @@ export default function ServerTerminal({ centerId, serverId }: { centerId: strin
                         e.currentTarget.reset();
                         break;
                     }
+                    case "exit": {
+                        setTerminalMessages(prev => [...prev, { content: "exit", type: "input" }])
+                        setTerminalMessages(prev => [...prev, { content: "For Security Reasons this action cannot be allowed", type: "error" }])
+                        setTerminalMessages(prev => [...prev, { content: "", type: "breaker" }])
+                        e.currentTarget.reset();
+                        break;
+                    }
+                    case "quit": {
+                        setTerminalMessages(prev => [...prev, { content: "quit", type: "input" }])
+                        setTerminalMessages(prev => [...prev, { content: "You may quit by clicking the X icon on the top right of the terminal window", type: "output" }])
+                        setTerminalMessages(prev => [...prev, { content: "", type: "breaker" }])
+                        e.currentTarget.reset();
+                        break;
+                    }
                     default: {
                         setTerminalMessages(prev => [...prev, { content: command, type: "input" }])
                         formData.append("serverId", serverId)
+                        formData.append("pwd", pwd)
                         formData.append("actionType", "runCommand")
                         terminalFetcher.submit(formData, { method: "POST", action: `/center/${centerId}/overview` })
                         e.currentTarget.reset();
@@ -67,7 +93,10 @@ export default function ServerTerminal({ centerId, serverId }: { centerId: strin
                 }
                 if (message.type === "output") {
                     return (
-                        <pre key={index} className="text-text whitespace-pre overflow-x-auto">
+                        <pre
+                            key={index}
+                            className="text-text whitespace-pre overflow-x-auto"
+                        >
                             {message.content}
                         </pre>
                     );
@@ -79,8 +108,8 @@ export default function ServerTerminal({ centerId, serverId }: { centerId: strin
                 );
             })}
             <span
-                className="flex items-center gap-2"
-            >$
+                className="flex items-center gap-2 text-nowrap"
+            >{pwd === '||$$$HOME$$$||' ? '' : pwd} $
                 <input
                     ref={inputRef}
                     className="w-full focus:outline-none"

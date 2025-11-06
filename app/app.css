@@ -2,10 +2,18 @@
 
 @plugin "tailwindcss-motion";
 
+@font-face {
+    font-family: 'JetBrainsMonoNerdFont';
+    src: url('/fonts/JetBrainsMonoNerdFont-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+
 @theme {
     --font-sans: "Funnel Display", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --font-mono: "Google Sans Code", monospace;
+    --font-mono: "JetbrainsMonoNerdFont", monospace;
     --color-text: #f1f2f4;
     --color-background: #030407;
     --color-background2: #0D1324;
@@ -14,7 +22,7 @@
     --color-accent: #f66c6a;
     --text-shadow-xl: 0 16px 32px;
     --text-shadow-2xl: 0 32px 64px;
-    --shadow-custom: 0 4px 8px 0 ;
+    --shadow-custom: 0 4px 8px 0;
     --tracking-custom: 20%;
 }
 
@@ -64,18 +72,10 @@ body {
     }
 
     .clickable {
-        @apply bg-gradient-to-b from-secondary/10 to-primary/10 p-2 text-base text-primary rounded-2xl bg-transparent 
-        border border-t-secondary/40 border-b-primary/40 border-x-primary/10 
-        disabled:opacity-40
-        hover:border-b-primary hover:cursor-pointer hover:shadow-custom hover:shadow-primary/25 hover:bg-secondary/10 
-        hover:border-x-transparent hover:border-t-secondary/15 hover:scale-[101%] hover:text-shadow-md hover:text-shadow-primary/25 transition-all;
+        @apply bg-gradient-to-b from-secondary/10 to-primary/10 p-2 text-base text-primary rounded-2xl bg-transparent border border-t-secondary/40 border-b-primary/40 border-x-primary/10 disabled:opacity-40 hover:border-b-primary hover:cursor-pointer hover:shadow-custom hover:shadow-primary/25 hover:bg-secondary/10 hover:border-x-transparent hover:border-t-secondary/15 hover:scale-[101%] hover:text-shadow-md hover:text-shadow-primary/25 transition-all;
     }
 
     .clickableButAccent {
-        @apply bg-gradient-to-b from-secondary/10 to-primary/10 p-2 text-base text-accent rounded-2xl bg-transparent
-        border border-t-secondary/40 border-b-accent/40 border-x-primary/10 
-        disabled:opacity-40
-        hover:border-b-accent hover:cursor-pointer hover:shadow-custom hover:shadow-accent/25 hover:bg-secondary/10
-        hover:border-x-transparent hover:border-t-secondary/15 hover:scale-[101%] hover:text-shadow-md hover:text-shadow-accent/25 transition-all;
+        @apply bg-gradient-to-b from-secondary/10 to-primary/10 p-2 text-base text-accent rounded-2xl bg-transparent border border-t-secondary/40 border-b-accent/40 border-x-primary/10 disabled:opacity-40 hover:border-b-accent hover:cursor-pointer hover:shadow-custom hover:shadow-accent/25 hover:bg-secondary/10 hover:border-x-transparent hover:border-t-secondary/15 hover:scale-[101%] hover:text-shadow-md hover:text-shadow-accent/25 transition-all;
     }
 }

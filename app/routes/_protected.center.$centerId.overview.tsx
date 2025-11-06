@@ -127,6 +127,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         case "runCommand": {
             const serverId = String(formData.get("serverId"))
             const command = String(formData.get("command"))
+            const pwd = String(formData.get("pwd"))
             try {
                 const res = await fetch(`${process.env.API_URL}/run/${serverId}`, {
                     method: "POST",
@@ -134,7 +135,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        command: command
+                        command: command,
+                        pwd: pwd
                     })
                 })
 
@@ -142,8 +144,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
                     throw new Error("Command execution failed");
                 }
                 const json = await res.json();
-                console.log("[app/routes/_protected.center.$centerId.overview.tsx:143] json.response = ", json.response)
-                return { output: json.response.output, error: json.response.error };
+                console.log("[app/routes/_protected.center.$centerId.overview.tsx:143] json.response = ", json)
+                return { output: json.response.output, error: json.response.error, pwd: json.response.pwd };
 
             } catch (error) {
                 return { output: null, error: `${error}` };
