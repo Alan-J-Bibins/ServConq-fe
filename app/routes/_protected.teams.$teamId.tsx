@@ -9,8 +9,23 @@ interface Team {
     id: string;
     name: string;
     description?: string;
-    createdAt?: string;
+    createdAt?: Date;
     joinToken?: string;
+    teamMembers: TeamMember[]
+}
+
+interface TeamMember {
+    id: string
+    joinedAt: Date
+    role: "OPERATOR" | "ADMIN" | "OWNER"
+    teamId: string
+    user: User
+}
+
+interface User {
+    id: string
+    name: string
+    email: string
 }
 
 interface LoaderData {
@@ -54,6 +69,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export default function TeamDetailPage() {
     const { team, errorMessage } = useLoaderData() as LoaderData;
+    console.log("[app/routes/_protected.teams.$teamId.tsx:56] team = ", team)
     const [copied, setCopied] = useState(false);
 
     if (errorMessage)
@@ -72,51 +88,74 @@ export default function TeamDetailPage() {
     return (
         <main className="p-6 flex flex-col gap-6 w-full h-full">
 
-            {/* Title Section */}
-            <section className="flex flex-col gap-4">
-                <h1 className="text-4xl font-bold">{team.name}</h1>
-                {team.description && (
-                    <p className="text-secondary text-xl">{team.description}</p>
-                )}
-                {team.createdAt && (
-                    <p className="text-sm opacity-70">
-                        Created: {new Date(team.createdAt).toLocaleDateString()}
-                    </p>
-                )}
-            </section>
-
-            {/* ✅ Team Join Token Section — Single Block */}
-            {team.joinToken && (
-                <section className="border border-secondary rounded-2xl p-6 bg-secondary/10 shadow-md max-w-xl">
-                    <div className="flex w-full justify-between items-center gap-4 flex-wrap">
-                        <h2 className="text-2xl font-semibold whitespace-nowrap">
-                            Team Join Token
-                        </h2>
-
-                        <div className="flex items-center gap-4">
-                            <span
-                                className="bg-secondary/20 px-4 py-2 rounded-xl text-lg font-mono"
-                            >
-                                {team.joinToken}
-                            </span>
-
-                            <button
-                                onClick={handleCopy}
-                                className="flex gap-2 items-center clickable px-4 py-2 rounded-xl bg-secondary/20 hover:bg-secondary/40 transition"
-                            >
-                                <Copy size={18} />
-                                {copied ? "Copied!" : "Copy"}
-                            </button>
-                        </div>
-                    </div>
-
-                    <p className="text-sm mt-3 opacity-60">
-                        Share this with someone to allow them to join your team.
-                        Do not post publicly.
-                    </p>
+            <section className="flex justify-between">
+                <section className="flex flex-col gap-4">
+                    <h1 className="text-4xl font-bold">{team.name}</h1>
+                    {team.description && (
+                        <p className="text-secondary text-xl">{team.description}</p>
+                    )}
+                    {team.createdAt && (
+                        <p className="text-sm opacity-70">
+                            Created: {new Date(team.createdAt).toLocaleDateString()}
+                        </p>
+                    )}
                 </section>
 
-            )}
+                {/* ✅ Team Join Token Section — Single Block */}
+                {team.joinToken && (
+                    <section className="border border-secondary rounded-2xl p-6 bg-secondary/10 shadow-md max-w-xl">
+                        <div className="flex w-full justify-between items-center gap-4 flex-wrap">
+                            <h2 className="text-2xl font-semibold whitespace-nowrap">
+                                Team Join Token
+                            </h2>
+
+                            <div className="flex items-center gap-4">
+                                <span
+                                    className="bg-secondary/20 px-4 py-2 rounded-xl text-lg font-mono"
+                                >
+                                    {team.joinToken}
+                                </span>
+
+                                <button
+                                    onClick={handleCopy}
+                                    className="flex gap-2 items-center clickable px-4 py-2 rounded-xl bg-secondary/20 hover:bg-secondary/40 transition"
+                                >
+                                    <Copy size={18} />
+                                    {copied ? "Copied!" : "Copy"}
+                                </button>
+                            </div>
+                        </div>
+
+                        <p className="text-sm mt-3 opacity-60">
+                            Share this with someone to allow them to join your team.
+                            Do not post publicly.
+                        </p>
+                    </section>
+
+                )}
+            </section>
+            <h2 className="text-xl font-bold text-primary">Members</h2>
+            <div className="bg-background/80 border border-secondary/40 rounded-2xl p-4">
+                <table className="w-full border-collapse">
+                    <thead className="text-lg text-left text-primary">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {team.teamMembers.map((member) => (
+                            <tr key={member.id}>
+                                <td>{member.user.name}</td>
+                                <td>{member.user.email}</td>
+                                <td className="uppercase text-accent tracking-custom">{member.role}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
         </main>
     );
 }

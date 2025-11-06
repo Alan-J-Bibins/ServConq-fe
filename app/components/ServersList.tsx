@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CustomDialog from "./Dialog";
 import { Form } from "react-router";
-import { Pencil, SquareTerminal, Terminal, Trash2 } from "lucide-react";
+import { Pencil, SquareTerminal, Trash2 } from "lucide-react";
 import ServerTerminal from "./ServerTerminal";
 
 

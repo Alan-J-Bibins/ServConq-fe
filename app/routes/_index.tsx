@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 export default function Page() {
     return (
         <div className="flex flex-col justify-center items-center h-screen w-full">
@@ -7,6 +9,7 @@ export default function Page() {
             <h1 className="text-9xl gradientText text-shadow-xl text-shadow-primary/45 motion-delay-1000 motion-opacity-in motion-translate-y-in">
                 ServConq
             </h1>
+            <Link to="/login" className="clickable motion-delay-1000 motion-opacity-in">Login</Link>
         </div>
     )
 }

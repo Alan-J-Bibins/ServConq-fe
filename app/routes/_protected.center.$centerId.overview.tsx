@@ -1,4 +1,4 @@
-import { OctagonAlert } from "lucide-react";
+import { OctagonAlert, Plus } from "lucide-react";
 import { Suspense } from "react";
 import { Await, Form, useLoaderData, type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
 import CustomDialog from "~/components/Dialog";
@@ -168,7 +168,7 @@ export default function Page() {
                 <CustomDialog
                     title="New Server"
                     trigger={
-                        <button className="clickable text-nowrap">New Server</button>
+                        <button className="clickable text-nowrap flex gap-2 items-center"><Plus />New Server</button>
                     }
                     submit={
                         <button
