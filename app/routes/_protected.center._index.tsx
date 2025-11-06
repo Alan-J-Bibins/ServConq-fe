@@ -9,7 +9,7 @@ import {
 import CustomDialog from "~/components/Dialog";
 import DataCenterCard from "~/components/DataCenterCard";
 import { serverSessionStorage } from "~/session.server";
-import { Listbox, ListboxOption, Transition } from "@headlessui/react";
+import { Listbox, Transition } from "@headlessui/react";
 import { Fragment, Suspense, useState } from "react";
 import DataCenterCardSkeleton from "~/components/skeleton/DataCenterCardSkeleton";
 
@@ -23,12 +23,11 @@ export type DataCenterEntry = {
     team_name?: string;
 };
 
-// 🧩 LOADER — Fetch Data Centers
+// 🧩 LOADER — Fetch Data Centers + Owned Teams
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const session = await serverSessionStorage.getSession(request.headers.get("Cookie"));
     const token = session.get("token");
 
-    // Don't await, just create promises and return them via defer
     const dataCenterPromise = fetch(`${process.env.API_URL}/dataCenter`, {
         headers: { Authorization: `Bearer ${token}` },
     }).then(async (res) => {
@@ -49,15 +48,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }).then(async (res) => {
         if (!res.ok) return [];
         const json = await res.json();
-        return (json.teamList || []).map((entry: any) => ({
-            id: entry.team.id,
-            name: entry.team.name,
-        }));
+
+        return (json.teamList || [])
+            .filter((entry: any) => entry.role === "OWNER") // ✅ Only owner teams
+            .map((entry: any) => ({
+                id: entry.team.id,
+                name: entry.team.name,
+            }));
     });
 
-    return { dataCenterPromise, teamPromise }
+    return { dataCenterPromise, teamPromise };
 };
-
 
 // 🧩 ACTION — Create New Data Center
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -78,7 +79,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 const res = await fetch(`${process.env.API_URL}/dataCenter`, {
                     method: "POST",
                     headers: {
-                        "Authorization": `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
@@ -119,9 +120,6 @@ export default function Page() {
     };
 
     const [selectedTeam, setSelectedTeam] = useState<{ id: string; name: string } | null>(null);
-    const [connectionError, setConnectionError] = useState<string | null>(null);
-
-
 
     return (
         <main className="p-4 flex flex-col w-full h-full justify-start items-start gap-4">
@@ -139,24 +137,16 @@ export default function Page() {
                         </button>
                     }
                     submit={
-                        <button
-                            form="newDataCenterForm"
-                            type="submit"
-                            className="clickable"
-                        >
+                        <button form="newDataCenterForm" type="submit" className="clickable">
                             Submit
                         </button>
                     }
                     cancel={<></>}
                 >
-                    <Form
-                        id="newDataCenterForm"
-                        method="POST"
-                        action="/center"
-                        className="flex flex-col gap-2"
-                    >
+                    <Form id="newDataCenterForm" method="POST" action="/center" className="flex flex-col gap-2">
                         <label>Data Center Name</label>
-                        <input className="inputField"
+                        <input
+                            className="inputField"
                             required
                             name="centerName"
                             type="text"
@@ -164,7 +154,8 @@ export default function Page() {
                         />
 
                         <label>Location</label>
-                        <input className="inputField"
+                        <input
+                            className="inputField"
                             required
                             name="centerLocation"
                             type="text"
@@ -179,43 +170,18 @@ export default function Page() {
                         />
 
                         <label>Team</label>
-                        <Suspense fallback={
-                            <input placeholder="Select a Team" disabled />
-                        }>
-                            <Await
-                                errorElement={
-                                    <div>Failed to Load Teams</div>
-                                }
-                                resolve={teamPromise}>
+                        <Suspense fallback={<input placeholder="Select a Team" disabled />}>
+                            <Await errorElement={<div>Failed to Load Teams</div>} resolve={teamPromise}>
                                 {(teamList) => (
                                     <Listbox value={selectedTeam} onChange={setSelectedTeam}>
                                         <div className="w-full">
-                                            {/* Button */}
                                             <Listbox.Button
-                                                className="
-                                    bg-secondary/20
-                                    border border-primary/40
-                                    text-primary
-                                    rounded-2xl
-                                    px-4 py-2
-                                    w-full
-                                    text-left
-                                    appearance-none
-                                    focus:border-primary
-                                    focus:ring-2
-                                    focus:ring-primary/40
-                                    focus:outline-none
-                                    hover:bg-secondary/30
-                                    transition-all
-                                    cursor-pointer
-                                    flex justify-between items-center
-                                  "
+                                                className="bg-secondary/20 border border-primary/40 text-primary rounded-2xl px-4 py-2 w-full text-left appearance-none focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none hover:bg-secondary/30 transition-all cursor-pointer flex justify-between items-center"
                                             >
                                                 {selectedTeam ? selectedTeam.name : "Select a Team"}
                                                 <ChevronDown size={18} className="text-primary ml-2" />
                                             </Listbox.Button>
 
-                                            {/* Dropdown Options */}
                                             <Transition
                                                 as={Fragment}
                                                 leave="transition ease-in duration-100"
@@ -223,26 +189,14 @@ export default function Page() {
                                                 leaveTo="opacity-0"
                                             >
                                                 <Listbox.Options
-                                                    className="
-                                                absolute mt-2 w-[94%]
-                                                bg-secondary/20
-                                                border border-primary/40
-                                                rounded-2xl
-                                                shadow-lg
-                                                backdrop-blur-md
-                                                text-primary
-                                                max-h-60
-                                                focus:outline-none
-                                                z-10
-                                                "
+                                                    className="absolute mt-2 w-[94%] bg-secondary/20 border border-primary/40 rounded-2xl shadow-lg backdrop-blur-md text-primary max-h-60 focus:outline-none z-10"
                                                 >
                                                     {teamList.map((team) => (
                                                         <Listbox.Option
                                                             key={team.id}
                                                             value={team}
                                                             className={({ active }) =>
-                                                                `cursor-pointer select-none px-4 py-2 rounded-xl ${active ? "bg-primary/30 text-primary font-semibold" : "text-primary"
-                                                                }`
+                                                                `cursor-pointer select-none px-4 py-2 rounded-xl ${active ? "bg-primary/30 text-primary font-semibold" : "text-primary"}`
                                                             }
                                                         >
                                                             {team.name}
@@ -256,34 +210,27 @@ export default function Page() {
                             </Await>
                         </Suspense>
 
-                        {/* Hidden input so form submission still includes team ID */}
                         <input type="hidden" name="teamId" value={selectedTeam?.id || ""} />
-                        <input
-                            className="inputField"
-                            hidden
-                            readOnly
-                            name="actionType"
-                            value="newDataCenter"
-                        />
+                        <input className="inputField" hidden readOnly name="actionType" value="newDataCenter" />
                     </Form>
                 </CustomDialog>
             </div>
 
-            <Suspense fallback={
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4">
-                    {Array.from({ length: 4 }).map((_, i) => (
-                        <DataCenterCardSkeleton key={i} />
-                    ))}
-                </div>
-            }>
+            <Suspense
+                fallback={
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                            <DataCenterCardSkeleton key={i} />
+                        ))}
+                    </div>
+                }
+            >
                 <Await resolve={dataCenterPromise} errorElement={<div>Error loading data centers</div>}>
                     {(dataCenters) =>
                         dataCenters.length === 0 ? (
                             <div className="text-secondary flex justify-center w-full items-center gap-2">
                                 <OctagonAlert size={48} />
-                                <span className="text-4xl">
-                                    Create a Data Center to get started
-                                </span>
+                                <span className="text-4xl">Create a Data Center to get started</span>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4">
@@ -301,33 +248,6 @@ export default function Page() {
                     }
                 </Await>
             </Suspense>
-
-            {/* ERROR / EMPTY / DATA DISPLAY  */}
-            {/* {errorMessage ? ( */}
-            {/*     <div className="text-accent-500 flex justify-center w-full items-center gap-2"> */}
-            {/*         <OctagonAlert size={48} /> */}
-            {/*         <span className="text-2xl">{errorMessage}</span> */}
-            {/*     </div> */}
-            {/* ) : dataCenters.length === 0 ? ( */}
-            {/*     <div className="text-secondary flex justify-center w-full items-center gap-2"> */}
-            {/*         <OctagonAlert size={48} /> */}
-            {/*         <span className="text-4xl"> */}
-            {/*             Create a Data Center to get started */}
-            {/*         </span> */}
-            {/*     </div> */}
-            {/* ) : ( */}
-            {/*     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4"> */}
-            {/*         {dataCenters.map((center) => ( */}
-            {/*             <DataCenterCard */}
-            {/*                 key={center.name} */}
-            {/*                 id={center.id} */}
-            {/*                 name={center.name} */}
-            {/*                 serversRunning="5/5" */}
-            {/*                 teamName={center.team_name || "No Team Assigned"} */}
-            {/*             /> */}
-            {/*         ))} */}
-            {/*     </div> */}
-            {/* )} */}
         </main>
     );
 }
