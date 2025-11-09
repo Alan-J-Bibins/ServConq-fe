@@ -1,7 +1,8 @@
-import { useLoaderData, type LoaderFunctionArgs } from "react-router";
+import { Form, useLoaderData, type LoaderFunctionArgs } from "react-router";
 import { serverSessionStorage } from "~/session.server";
-import { Copy } from "lucide-react";
+import { Copy, Pencil } from "lucide-react";
 import { useState } from "react";
+import CustomDialog from "~/components/Dialog";
 
 /* ------------------------- Types ------------------------- */
 
@@ -150,6 +151,17 @@ export default function TeamDetailPage() {
                                 <td>{member.user.name}</td>
                                 <td>{member.user.email}</td>
                                 <td className="uppercase text-accent tracking-custom">{member.role}</td>
+                                <td className="w-0">
+                                    <CustomDialog
+                                        title={`Edit Member "${member.user.name}"`}
+                                        trigger={
+                                            <button className="clickable"><Pencil size={16} className="text-primary"/></button>
+                                        }
+                                    >
+                                        <Form>
+                                        </Form>
+                                    </CustomDialog>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

@@ -143,7 +143,7 @@ function EmptyMessage({ text }: { text: string }) {
 
 function TeamGrid({ list }: { list: TeamListEntry[] }) {
     return (
-        <div className="grid grid-cols-6 w-full gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-4">
             {list.map((entry) => (
                 <TeamCard
                     key={entry.team.id}
