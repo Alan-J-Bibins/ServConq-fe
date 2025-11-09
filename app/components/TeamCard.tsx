@@ -10,9 +10,9 @@ export default function TeamCard({ teamId, teamName, memberCount }: { teamId: st
             relative overflow-hidden group shadow-custom shadow-primary/25
             hover:border-b-primary hover:border-x-secondary/40 hover:bg-secondary/20 hover:shadow-lg hover:scale-[101%] transition-all"
         >
-            <Workflow className="text-primary"/>
-            <div className="flex flex-col gap-0 z-10">
-                <span className="text-xl font-bold"> {teamName} </span>
+            <Workflow className="text-primary shrink-0"/>
+            <div className="flex flex-col gap-0 z-10 w-full">
+                <span className="text-xl font-bold truncate w-full"> {teamName} </span>
                 <span className="text-primary"> {memberCount} {memberCount === 1 ? "Member" : "Members"} </span>
             </div>
             <div className="absolute -bottom-2 left-0 w-full h-1/4 bg-secondary blur-xl rounded-full -z-0 
