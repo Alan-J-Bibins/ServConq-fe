@@ -164,74 +164,77 @@ export default function Page() {
             <div className="flex items-center w-full gap-2">
                 <h1 className="text-3xl font-bold text-nowrap">Servers</h1>
                 <hr className="w-full border-secondary" />
-                <CustomDialog
-                    title="New Server"
-                    trigger={
-                        <button className="clickable text-nowrap flex gap-2 items-center"><Plus />New Server</button>
-                    }
-                    submit={
-                        <button
-                            className="clickable"
-                            form="newServerForm"
-                            type="submit"
-                        >
-                            Submit
-                        </button>
-                    }
-                >
-                    <Form
-                        id="newServerForm"
-                        method="POST"
-                        action={`/center/${centerId}/overview`}
-                        className="flex flex-col gap-4"
-                        hidden={teamMembershipData?.role === "OPERATOR"}
+                {teamMembershipData?.role !== 'OPERATOR' && (
+                    <CustomDialog
+                        title="New Server"
+                        trigger={
+                            <button className="clickable text-nowrap flex gap-2 items-center"><Plus />New Server</button>
+                        }
+                        submit={
+                            <button
+                                className="clickable"
+                                form="newServerForm"
+                                type="submit"
+                            >
+                                Submit
+                            </button>
+                        }
                     >
-                        <label>Hostname</label>
-                        <input
-                            className="inputField"
-                            required
-                            type="text"
-                            name="newServerHostname"
-                            placeholder="Enter Server Name"
-                        />
-                        <label>Connection String</label>
-                        <input className="inputField"
-                            required
-                            type="text"
-                            name="newServerConnectionString"
-                            placeholder="Enter Connection String Given By Agent Binary"
-                        />
-                        <input hidden readOnly name="dataCenterId" value={centerId} />
-                        <input hidden readOnly name="teamId" value={teamMembershipData?.teamId} />
-                        <input hidden readOnly name="actionType" value="newServer" />
-                    </Form>
-                </CustomDialog>
+                        <Form
+                            id="newServerForm"
+                            method="POST"
+                            action={`/center/${centerId}/overview`}
+                            className="flex flex-col gap-4"
+                        >
+                            <label>Hostname</label>
+                            <input
+                                className="inputField"
+                                required
+                                type="text"
+                                name="newServerHostname"
+                                placeholder="Enter Server Name"
+                            />
+                            <label>Connection String</label>
+                            <input className="inputField"
+                                required
+                                type="text"
+                                name="newServerConnectionString"
+                                placeholder="Enter Connection String Given By Agent Binary"
+                            />
+                            <input hidden readOnly name="dataCenterId" value={centerId} />
+                            <input hidden readOnly name="teamId" value={teamMembershipData?.teamId} />
+                            <input hidden readOnly name="actionType" value="newServer" />
+                        </Form>
+                    </CustomDialog>
+                )}
             </div>
-            <Suspense fallback={
-                <div className="w-full flex gap-4 flex-col">
-                    {Array.from({ length: 2 }).map((_, i) => (
-                        <ServerListEntrySkeleton key={i} />
-                    ))}
-                </div>
-            }>
-                <Await resolve={serverPromise} errorElement={<div>Failed to load servers</div>}>
-                    {(servers) => {
-                        if (!servers || servers.length === 0) {
+            {teamMembershipData && (
+                <Suspense fallback={
+                    <div className="w-full flex gap-4 flex-col">
+                        {Array.from({ length: 2 }).map((_, i) => (
+                            <ServerListEntrySkeleton key={i} />
+                        ))}
+                    </div>
+                }>
+                    <Await resolve={serverPromise} errorElement={<div>Failed to load servers</div>}>
+                        {(servers) => {
+                            if (!servers || servers.length === 0) {
+                                return (
+                                    <div className="text-secondary flex justify-center w-full items-center gap-2">
+                                        <OctagonAlert size={48} />
+                                        <span className="text-4xl">Create a Server to get started</span>
+                                    </div>
+                                );
+                            }
                             return (
-                                <div className="text-secondary flex justify-center w-full items-center gap-2">
-                                    <OctagonAlert size={48} />
-                                    <span className="text-4xl">Create a Server to get started</span>
+                                <div className="w-full">
+                                    <ServersList servers={servers} centerId={centerId} teamMembershipData={teamMembershipData} />
                                 </div>
                             );
-                        }
-                        return (
-                            <div className="w-full">
-                                <ServersList servers={servers} centerId={centerId} />
-                            </div>
-                        );
-                    }}
-                </Await>
-            </Suspense>
+                        }}
+                    </Await>
+                </Suspense>
+            )}
             <div>
             </div>
         </div>

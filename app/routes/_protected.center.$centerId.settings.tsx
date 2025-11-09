@@ -164,39 +164,41 @@ export default function Page() {
                         className="inputField w-full"
                     />
                     <label>Team Assigned: {dataCenter.team.name}</label>
-                    <div className="w-full flex flex-row-reverse gap-4 items-center">
-                        {!isEditing && (
-                            <button
-                                className="clickable"
-                                type="button"
-                                onClick={() => setIsEditing(true)}
-                            >
-                                Edit Profile
-                            </button>
-                        )}
-
-                        {isEditing && (
-                            <>
-                                <button
-                                    className="clickable"
-                                    type="submit"
-                                >
-                                    {navigation.state !== 'idle' ? "Saving" : "Save"}
-                                </button>
+                    {teamMember?.role !== "OPERATOR" && (
+                        <div className="w-full flex flex-row-reverse gap-4 items-center">
+                            {!isEditing && (
                                 <button
                                     className="clickable"
                                     type="button"
-                                    onClick={() => {
-                                        setIsEditing(false)
-                                        formRef.current?.reset();
-                                    }}
+                                    onClick={() => setIsEditing(true)}
                                 >
-                                    Cancel
+                                    Edit Profile
                                 </button>
-                            </>
+                            )}
 
-                        )}
-                    </div>
+                            {isEditing && (
+                                <>
+                                    <button
+                                        className="clickable"
+                                        type="submit"
+                                    >
+                                        {navigation.state !== 'idle' ? "Saving" : "Save"}
+                                    </button>
+                                    <button
+                                        className="clickable"
+                                        type="button"
+                                        onClick={() => {
+                                            setIsEditing(false)
+                                            formRef.current?.reset();
+                                        }}
+                                    >
+                                        Cancel
+                                    </button>
+                                </>
+
+                            )}
+                        </div>
+                    )}
                 </Form>
             )}
         </div>

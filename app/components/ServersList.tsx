@@ -42,10 +42,12 @@ export function formatBytes(bytes: number, decimals = 2): string {
 
 export default function ServersList({
     servers,
-    centerId
+    centerId,
+    teamMembershipData,
 }: {
     servers: { id: string; hostname: string }[],
-    centerId: string
+    centerId: string,
+    teamMembershipData: TeamMember
 }) {
 
     const [latestBatch, setLatestBatch] = useState<MetricsBatch | null>(null);
@@ -96,36 +98,39 @@ export default function ServersList({
                         </div>
                         <div className="flex flex-col gap-4 justify-between items-end">
                             <div className="flex justify-center gap-2">
-                                <CustomDialog
-                                    title="Delete Server"
-                                    trigger={
-                                        <button className="clickableButAccent" >
-                                            <Trash2 size={20} />
-                                        </button>
-                                    }
-                                    submit={
-                                        <button
-                                            type="submit"
-                                            form="deleteServerForm"
-                                            className="clickableButAccent"
-                                        >
-                                            Confirm
-                                        </button>
-                                    }
-                                    cancel={
-                                        <button className="clickable">Cancel</button>
-                                    }
-                                >
-                                    <Form
-                                        id="deleteServerForm"
-                                        method="DELETE"
-                                        action={`/center/${centerId}/overview`}
+                                {teamMembershipData.role !== 'OPERATOR' && (
+
+                                    <CustomDialog
+                                        title="Delete Server"
+                                        trigger={
+                                            <button className="clickableButAccent" >
+                                                <Trash2 size={20} />
+                                            </button>
+                                        }
+                                        submit={
+                                            <button
+                                                type="submit"
+                                                form="deleteServerForm"
+                                                className="clickableButAccent"
+                                            >
+                                                Confirm
+                                            </button>
+                                        }
+                                        cancel={
+                                            <button className="clickable">Cancel</button>
+                                        }
                                     >
-                                        <label>Permanently Delete the Server?</label>
-                                        <input name="actionType" value="deleteServer" readOnly hidden />
-                                        <input name="deleteServerId" value={server.id} readOnly hidden />
-                                    </Form>
-                                </CustomDialog>
+                                        <Form
+                                            id="deleteServerForm"
+                                            method="DELETE"
+                                            action={`/center/${centerId}/overview`}
+                                        >
+                                            <label>Permanently Delete the Server?</label>
+                                            <input name="actionType" value="deleteServer" readOnly hidden />
+                                            <input name="deleteServerId" value={server.id} readOnly hidden />
+                                        </Form>
+                                    </CustomDialog>
+                                )}
                                 <CustomDialog
                                     title="Edit Server"
                                     trigger={
