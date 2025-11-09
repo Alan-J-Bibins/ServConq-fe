@@ -1,3 +1,9 @@
+type User = {
+    id: string,
+    name: string,
+    email: string,
+}
+
 type Team = {
     id: string
     name: string
@@ -17,6 +23,7 @@ type TeamMember = {
     teamId: string,
     role: "OWNER" | "ADMIN" | "OPERATOR",
     joinedAt: Date
+    user: User
 }
 
 type Log = {
