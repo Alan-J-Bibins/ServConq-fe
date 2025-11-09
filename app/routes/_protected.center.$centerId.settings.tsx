@@ -1,6 +1,6 @@
 import { Trash2 } from "lucide-react";
-import { useState } from "react";
-import { Form, useLoaderData, type LoaderFunctionArgs } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { Form, useActionData, useLoaderData, useNavigation, type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
 import CustomDialog from "~/components/Dialog";
 import { getUserToken } from "~/utils/helpers";
 
@@ -42,16 +42,55 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     }
 }
 
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+    console.log("CHECKPOINT, REACHED AcTION")
+    const formData = await request.formData();
+    const name = String(formData.get("editDataCenterName"))
+    const location = String(formData.get("editDataCenterLocation"))
+    const description = String(formData.get("editDataCenterDescription"))
+    const centerId = params.centerId;
+    const userToken = await getUserToken(request)
+
+    try {
+        await fetch(`${process.env.API_URL}/dataCenter/${centerId}`, {
+            method: "PATCH",
+            headers: {
+                "Authorization": `Bearer ${userToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name,
+                description,
+                location
+            })
+        })
+        console.log("hello there")
+        return { success: true }
+    } catch (error) {
+        return { success: false }
+    }
+}
+
 export default function Page() {
-    const { dataCenter, teamMember } = useLoaderData() as { dataCenter: DataCenter, teamMember: TeamMember };
+    const { dataCenter, teamMember } = useLoaderData() as { dataCenter: DataCenter | null, teamMember: TeamMember | null };
     const [isEditing, setIsEditing] = useState<boolean>(false);
+    const navigation = useNavigation()
+    const actionData = useActionData()
+
+    useEffect(() => {
+        if (actionData?.success) {
+            setIsEditing(false);
+        }
+    }, [actionData]);
+
+    const formRef = useRef<HTMLFormElement | null>(null)
 
     return (
         <div className="p-4 w-full flex flex-col gap-4 overflow-auto">
             <div className="flex items-center w-full gap-2">
                 <h1 className="text-3xl font-bold text-nowrap">Settings</h1>
                 <hr className="w-full border-secondary" />
-                {teamMember.role === 'OWNER' && (
+                {teamMember && teamMember.role === 'OWNER' && (
                     <CustomDialog
                         title="Delete Data Center"
                         trigger={
@@ -79,7 +118,7 @@ export default function Page() {
                             method="POST"
                             action="/center"
                         >
-                            <label>Permanently Delete {dataCenter.name}?</label>
+                            <label>Permanently Delete {dataCenter?.name}?</label>
                             <input
                                 name="actionType"
                                 value="deleteDataCenter"
@@ -87,7 +126,7 @@ export default function Page() {
                             />
                             <input
                                 name="deleteDataCenterId"
-                                value={dataCenter.id}
+                                value={dataCenter?.id}
                                 hidden readOnly
                             />
                         </Form>
@@ -97,44 +136,66 @@ export default function Page() {
             {dataCenter && (
                 <Form
                     id="editDataCenterForm"
+                    ref={formRef}
                     method="POST"
-                    action=""
                     className="w-full flex flex-col gap-4"
                 >
                     <label>Datacenter name</label>
                     <input
                         required
-                        disabled
+                        name="editDataCenterName"
+                        disabled={!isEditing}
                         defaultValue={dataCenter.name}
                         className="inputField w-full"
                     />
                     <label>Datacenter Description</label>
                     <input
-                        required
-                        disabled
+                        disabled={!isEditing}
+                        name="editDataCenterDescription"
                         defaultValue={dataCenter.description}
                         className="inputField w-full"
                     />
                     <label>Datacenter Location</label>
                     <input
                         required
-                        disabled
+                        name="editDataCenterLocation"
+                        disabled={!isEditing}
                         defaultValue={dataCenter.location}
                         className="inputField w-full"
                     />
                     <label>Team Assigned: {dataCenter.team.name}</label>
-                    <div className="w-full flex flex-row-reverse">
-                        {
-                            !isEditing && (
+                    <div className="w-full flex flex-row-reverse gap-4 items-center">
+                        {!isEditing && (
+                            <button
+                                className="clickable"
+                                type="button"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                Edit Profile
+                            </button>
+                        )}
+
+                        {isEditing && (
+                            <>
+                                <button
+                                    className="clickable"
+                                    type="submit"
+                                >
+                                    {navigation.state !== 'idle' ? "Saving" : "Save"}
+                                </button>
                                 <button
                                     className="clickable"
                                     type="button"
-                                    onClick={() => setIsEditing(true)}
+                                    onClick={() => {
+                                        setIsEditing(false)
+                                        formRef.current?.reset();
+                                    }}
                                 >
-                                    Edit Profile
+                                    Cancel
                                 </button>
-                            )
-                        }
+                            </>
+
+                        )}
                     </div>
                 </Form>
             )}

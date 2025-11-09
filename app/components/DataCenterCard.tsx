@@ -26,7 +26,7 @@ export default function DataCenterCard({
             <div className="flex flex-col gap-2 w-full z-10">
                 <Server size={24} className="text-primary" />
                 <h2 className="text-xl">{name}</h2>
-                <span className="text-green-600"> Servers: {serversCount} </span>
+                <span className="text-primary"> Servers: {serversCount} </span>
                 <div className="flex justify-end w-full">
                     <span className="text-accent">
                         {teamName || "Unassigned"}
