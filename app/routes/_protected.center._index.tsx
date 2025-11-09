@@ -21,6 +21,7 @@ export type DataCenterEntry = {
     location?: string;
     team_id?: string;
     team_name?: string;
+    server_count?: number;
 };
 
 // 🧩 LOADER — Fetch Data Centers + Owned Teams
@@ -40,6 +41,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
             location: dc.location,
             team_id: dc.team_id,
             team_name: dc.team_name,
+            server_count: dc.server_count
         }));
     });
 
@@ -105,6 +107,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 console.error("❌ Action failed:", err);
                 return { err: "Unable to reach server" };
             }
+        }
+        case "deleteDataCenter": {
+
+            const dataCenterId = formData.get("deleteDataCenterId")
+            try {
+                await fetch(`${process.env.API_URL}/dataCenter/${dataCenterId}`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+            } catch (error) {
+                return { err: error }
+            }
+            break;
         }
 
         default:
@@ -172,41 +189,43 @@ export default function Page() {
                         <label>Team</label>
                         <Suspense fallback={<input placeholder="Select a Team" disabled />}>
                             <Await errorElement={<div>Failed to Load Teams</div>} resolve={teamPromise}>
-                                {(teamList) => (
-                                    <Listbox value={selectedTeam} onChange={setSelectedTeam}>
-                                        <div className="w-full">
-                                            <Listbox.Button
-                                                className="bg-secondary/20 border border-primary/40 text-primary rounded-2xl px-4 py-2 w-full text-left appearance-none focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none hover:bg-secondary/30 transition-all cursor-pointer flex justify-between items-center"
-                                            >
-                                                {selectedTeam ? selectedTeam.name : "Select a Team"}
-                                                <ChevronDown size={18} className="text-primary ml-2" />
-                                            </Listbox.Button>
-
-                                            <Transition
-                                                as={Fragment}
-                                                leave="transition ease-in duration-100"
-                                                leaveFrom="opacity-100"
-                                                leaveTo="opacity-0"
-                                            >
-                                                <Listbox.Options
-                                                    className="absolute mt-2 w-[94%] bg-secondary/20 border border-primary/40 rounded-2xl shadow-lg backdrop-blur-md text-primary max-h-60 focus:outline-none z-10"
+                                {(teamList) => {
+                                    if (teamList.length === 0) return (<div>Create a Team to get started</div>)
+                                    else
+                                        return (<Listbox value={selectedTeam} onChange={setSelectedTeam}>
+                                            <div className="w-full">
+                                                <Listbox.Button
+                                                    className="bg-secondary/20 border border-primary/40 text-primary rounded-2xl px-4 py-2 w-full text-left appearance-none focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none hover:bg-secondary/30 transition-all cursor-pointer flex justify-between items-center"
                                                 >
-                                                    {teamList.map((team) => (
-                                                        <Listbox.Option
-                                                            key={team.id}
-                                                            value={team}
-                                                            className={({ active }) =>
-                                                                `cursor-pointer select-none px-4 py-2 rounded-xl ${active ? "bg-primary/30 text-primary font-semibold" : "text-primary"}`
-                                                            }
-                                                        >
-                                                            {team.name}
-                                                        </Listbox.Option>
-                                                    ))}
-                                                </Listbox.Options>
-                                            </Transition>
-                                        </div>
-                                    </Listbox>
-                                )}
+                                                    {selectedTeam ? selectedTeam.name : "Select a Team"}
+                                                    <ChevronDown size={18} className="text-primary ml-2" />
+                                                </Listbox.Button>
+
+                                                <Transition
+                                                    as={Fragment}
+                                                    leave="transition ease-in duration-100"
+                                                    leaveFrom="opacity-100"
+                                                    leaveTo="opacity-0"
+                                                >
+                                                    <Listbox.Options
+                                                        className="absolute mt-2 w-[94%] bg-secondary/20 border border-primary/40 rounded-2xl shadow-lg backdrop-blur-md text-primary max-h-60 focus:outline-none z-10"
+                                                    >
+                                                        {teamList.map((team) => (
+                                                            <Listbox.Option
+                                                                key={team.id}
+                                                                value={team}
+                                                                className={({ active }) =>
+                                                                    `cursor-pointer select-none px-4 py-2 rounded-xl ${active ? "bg-primary/30 text-primary font-semibold" : "text-primary"}`
+                                                                }
+                                                            >
+                                                                {team.name}
+                                                            </Listbox.Option>
+                                                        ))}
+                                                    </Listbox.Options>
+                                                </Transition>
+                                            </div>
+                                        </Listbox>);
+                                }}
                             </Await>
                         </Suspense>
 
@@ -239,7 +258,7 @@ export default function Page() {
                                         key={center.id}
                                         id={center.id}
                                         name={center.name}
-                                        serversRunning="5/5"
+                                        serversCount={center.server_count || 0}
                                         teamName={center.team_name || "No Team Assigned"}
                                     />
                                 ))}

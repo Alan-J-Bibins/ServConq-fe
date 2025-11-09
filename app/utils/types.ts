@@ -27,3 +27,11 @@ type Log = {
     message: string,
     createdAt: Date
 }
+
+type DataCenter = {
+    id: string
+    name: string
+    location: string
+    description: string
+    team: Team
+}

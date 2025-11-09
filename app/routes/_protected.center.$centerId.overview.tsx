@@ -34,7 +34,6 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
         }
 
         const data = await res.json();
-        console.log("[app/routes/_protected.center.$centerId.overview.tsx:21] data = ", data)
         if (data.error) {
             return { teamMembershipData: null, centerId, error: data.error, serverPromise }
         }

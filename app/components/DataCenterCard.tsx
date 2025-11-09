@@ -4,7 +4,7 @@ import { Link } from "react-router";
 interface DataCenterCardProps {
     id: string;
     name: string;
-    serversRunning: string;
+    serversCount: number;
     teamName: string;
 }
 
@@ -12,7 +12,7 @@ interface DataCenterCardProps {
 export default function DataCenterCard({
     id,
     name,
-    serversRunning,
+    serversCount,
     teamName,
 }: DataCenterCardProps) {
     return (
@@ -26,7 +26,7 @@ export default function DataCenterCard({
             <div className="flex flex-col gap-2 w-full z-10">
                 <Server size={24} className="text-primary" />
                 <h2 className="text-xl">{name}</h2>
-                <span className="text-green-600"> Servers running: {serversRunning ?? "5/5"} </span>
+                <span className="text-green-600"> Servers: {serversCount} </span>
                 <div className="flex justify-end w-full">
                     <span className="text-accent">
                         {teamName || "Unassigned"}
