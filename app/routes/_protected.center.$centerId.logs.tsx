@@ -2,7 +2,7 @@ import { useLoaderData, type LoaderFunctionArgs } from "react-router"
 import { getUserToken } from "~/utils/helpers"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-    const userToken = getUserToken(request);
+    const userToken = await getUserToken(request);
     //this is the user's token, you need to pass this along with the fetch call to the backend otherwise the call wont work
 
     // get the logs here using `await fetch()`
