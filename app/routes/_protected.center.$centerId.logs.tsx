@@ -6,7 +6,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     //this is the user's token, you need to pass this along with the fetch call to the backend otherwise the call wont work
 
     // get the logs here using `await fetch()`
-    // refer to other loaders if you want
+    // refer to loaders of other pages if you would like
 
     // Dummy array, after the backend call you'll have an array like this
     const logs: Log[] = [];
@@ -18,6 +18,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function Page() {
     const { logs } = useLoaderData<typeof loader>() //here we are accepting the logs that we got from loader
+
+
+    // Whatever this function returns is what you see on the page, this is how all react components work
     return (
         <div>Logs Section</div>
     )
